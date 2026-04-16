@@ -17,5 +17,9 @@
   "bugs": {
     "url": "https://github.com/Heesun0514/Daycare-Digital-Logbook/issues"
   },
-  "homepage": "https://github.com/Heesun0514/Daycare-Digital-Logbook#readme"
+  "homepage": "https://github.com/Heesun0514/Daycare-Digital-Logbook#readme",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1"
+  }
 }
