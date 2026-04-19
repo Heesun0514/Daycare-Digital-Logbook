@@ -23,12 +23,20 @@ app.get('/', (req, res) => {
 // create : check-in
 app.post('/api/attendance/checkin',(req,res)=>
 {
+    // receice data from client 
    const {child_name,arrival_time,date}=req.body;
 
-   // temporary check if received 
+   // check if all data exists (validation)
+   if ( !child_name || ! arrival_time || ! data){
+    return res.status(400).json({
+        error:'child_name,arrival_time,data are required'
+        
+    });
+
+   }
 
    res.json({
-    message:'Checkin API workds',
+    message:'Validation passed!',
     received: {child_name,arrival_time,date}
    });
 });
