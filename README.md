@@ -14,10 +14,41 @@
 
 ---
 
-
 # 🧸📝 Childcare Smart Notebook
 
-> A smart tracking system for childcare centers with gesture-based check-in/out, reporting, and parent access.
+## System Requirements
+1.1 Organisation Selection  
+
+**Organisation:** Daycare Centre  
+
+**Why I chose this organisation:**  
+- I worked at a daycare centre and experienced the problem first-hand  
+- Currently, teachers manually write in booklets for each child (arrival, departure, nappy, nap time, meals)  
+- Teachers also write the same information in a main book (double work)  
+- Parents often forget to bring the booklet back the next day  
+- When inspectors visit, it's difficult to quickly check a child's attendance rate  
+
+**The Problem:**  
+- ❌ Paper-based system is inefficient  
+- ❌ Teachers waste time writing duplicate information  
+- ❌ Lost booklets = lost data  
+- ❌ Hard to generate attendance reports for inspectors  
+
+**The Solution:**  
+- ✅ Digital tracking system  
+- ✅ Parents can view online (no lost booklets)  
+- ✅ Director can generate attendance reports instantly  
+- ✅ Inspectors can verify if children meet minimum attendance requirements  
+
+---
+
+1.2 Functional Requirements  
+
+1.3 Non-functional Requirements  
+
+1.4 Data requirements 
+
+1.5 Use Cases  
 
 ---
 
