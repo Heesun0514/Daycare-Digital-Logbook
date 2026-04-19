@@ -54,7 +54,7 @@
 |------|--------|
 | 1 | Teacher clicks **"Attendance"** tab |
 | 2 | System displays list of children with ON/OFF buttons (all OFF) |
-| 3 | Teacher swipes a child's button **right → left** |
+| 3 | Teacher swipes a child's button **left→right** |
 | 4 | Button changes color to ON state |
 | 5 | System automatically saves current time as arrival time |
 | 6 | Teacher can see at a glance who has arrived |
@@ -71,7 +71,7 @@
 |------|--------|
 | 1 | Teacher clicks **"Attendance"** tab |
 | 2 | System displays list of children with ON/OFF status visible |
-| 3 | Teacher swipes an ON child's button **left → right** |
+| 3 | Teacher swipes an ON child's button **right→left** |
 | 4 | Button returns to OFF state |
 | 5 | System automatically saves current time as departure time |
 
@@ -81,7 +81,7 @@
 |------|--------|
 | 1 | Teacher tries to swipe OFF a child who is already OFF |
 | 2 | Button stays OFF (nothing happens) |
-| 3 | Teacher swipes **right → left** to turn ON first |
+| 3 | Teacher swipes **left→right**  to turn ON first |
 
 ---
 
