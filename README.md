@@ -286,9 +286,6 @@
 | Update | Edit arrival/departure | `PUT /api/attendance/:id` |
 | Delete | (Not required) | N/A |
 
-
-
-
 ---
 
 ## 3. System Architecture
