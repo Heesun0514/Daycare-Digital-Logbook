@@ -1,7 +1,7 @@
 // server.js create an Express sever :  https://runjs.app/blog/how-to-start-a-node-server
 
-// Impiort the express library that helps to mkae a web server
-import express from "express";
+// Get the express library that helps to mkae a web server
+const express =require("express");
 
 //Use express to create a server. Name it app.
 const app = express();
