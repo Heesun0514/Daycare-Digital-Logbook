@@ -20,7 +20,7 @@ app.get('/', (req, res) => {
 });
 
 // create : check-in
-app.post('/api/attendace/checkin',(req,res)=>
+app.post('/api/attendance/checkin',(req,res)=>
 {
     res.send('Checkin API works!')
 });
