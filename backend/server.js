@@ -19,6 +19,11 @@ app.get('/', (req, res) => {
     res.send("Hello World!");
 });
 
+// create : check-in
+app.post('/api/attendace/checkin',(req,res)=>
+{
+    res.send('Checkin API works!')
+});
 
 // Start the server
 app.listen(port,()=>{
