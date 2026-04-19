@@ -277,6 +277,18 @@
 
 ## 2. CRUD Operations
 
+| Operation | Description | API Endpoint |
+|-----------|-------------|--------------|
+| Create | Record arrival time | `POST /api/attendance/checkin` |
+| Read | View today's attendance | `GET /api/attendance/today` |
+| Read | Generate report | `GET /api/attendance/report?from=` |
+| Update | Record departure time | `PUT /api/attendance/checkout/:id` |
+| Update | Edit arrival/departure | `PUT /api/attendance/:id` |
+| Delete | (Not required) | N/A |
+
+
+
+
 ---
 
 ## 3. System Architecture
