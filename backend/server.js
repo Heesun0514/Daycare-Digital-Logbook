@@ -22,7 +22,14 @@ app.get('/', (req, res) => {
 // create : check-in
 app.post('/api/attendance/checkin',(req,res)=>
 {
-    res.send('Checkin API works!')
+   const {child_name,arrival_time,date}=req.body;
+
+   // temporary check if received 
+
+   res.json({
+    message:'Checkin API workds',
+    received: {child_name,arrival_time,date}
+   });
 });
 
 // Start the server
