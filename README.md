@@ -61,13 +61,21 @@
 - **UPDATE** → Check-out (departure time), Edit times  
 - **DELETE** → Not required (departure time marks the end of record)
 
-
-
-
-
-
-
 1.3 Non-functional Requirements  
+
+| Category | Requirement | Why Important |
+|----------|-------------|----------------|
+| Architecture | API-first design with no page refresh | Smooth user experience |
+| Performance | Check-in/out should take < 2 seconds | Teachers are busy with children |
+| Usability | Simple swipe gestures for mobile | Teachers use phones/tablets |
+| Availability | System accessible 8am-6pm (daycare hours) | Core operating hours |
+| Data Persistence | Data saved even if server restarts | No lost attendance records |
+| Mobile-Friendly | Works on tablets and phones | Teachers move around |
+| Accuracy | Timestamps must be accurate | Legal requirement for attendance |
+| Security | Parents can only see their own child | Privacy requirement |
+
+---
+
 
 1.4 Data requirements 
 
