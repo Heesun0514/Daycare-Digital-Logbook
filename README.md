@@ -1,4 +1,17 @@
 
+**Student Name:** Huiseon Yi 
+**Student Number:**  10599161
+**Module:** Advanced Programming (B8IT150)
+**Lecturer:** Paul Laird
+
+---
+
+## 📚 Documentation
+**Google Docs Link:** https://docs.google.com/document/d/1ZdpxEJkm0rWf6x-e28wwlwvCubOeQxV2J4zNFa6sdmc/edit?usp=sharing
+
+---
+
+
 # 🧸📝 Childcare Smart Notebook
 
 > A smart tracking system for childcare centers with gesture-based check-in/out, reporting, and parent access.
