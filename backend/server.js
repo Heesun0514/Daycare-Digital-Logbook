@@ -26,7 +26,7 @@ app.post('/api/attendance/checkin',(req,res)=>
     // receice data from client 
    const {child_name,arrival_time,date}=req.body;
 
-   // check if all data exists (validation)
+   // 1. check if all data exists (validation)
    if ( !child_name || ! arrival_time || ! date){
 
     //"Bad Request" error (400)
@@ -37,7 +37,7 @@ app.post('/api/attendance/checkin',(req,res)=>
 
    }
 
-   // Save to database 
+   // 2. Save to database 
                 //The ? symbols are placeholders that keep the database safe from hackers (SQL injection).
    const sql=`INSERT INTO attendance(child_name,arrival_time,date)VALUES(?,?,?);`
    
