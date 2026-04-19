@@ -28,6 +28,8 @@ app.post('/api/attendance/checkin',(req,res)=>
 
    // check if all data exists (validation)
    if ( !child_name || ! arrival_time || ! date){
+
+    //"Bad Request" error (400)
     return res.status(400).json({
         error:'child_name,arrival_time,date are required'
         
@@ -35,16 +37,33 @@ app.post('/api/attendance/checkin',(req,res)=>
 
    }
 
-   res.json({
-    message:'Validation passed!',
-    received: {child_name,arrival_time,data}
+   // Save to database 
+                //The ? symbols are placeholders that keep the database safe from hackers (SQL injection).
+   const sql=`INSERT INTO attendance(child_name,arrival_time,date)VALUES(?,?,?);`
+   
+   //Run the SQL query with the actual values
+   db.run(sql,[child_name,arrival_time,date],function(err){
+
+    //If database error occurs, send 500 server error.
+    if(err){
+        return res.status(500).json({error:err.message})
+    }
+
+   //If successful, send back 201 (created) with the new data and success message.
+   res.status(201).json({
+    id:this.lastID,
+    child_name,
+    arrival_time,
+    date,
+    message:'✅ Check-in successful'
    });
 });
+
+});
+
 
 // Start the server
 app.listen(port,()=>{
     console.log("Server is running"); // Show in terminal
     console.log(` Express server runing at http://localhost:${port}`); // Show address 
 });
-
-
