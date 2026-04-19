@@ -29,7 +29,7 @@ app.post('/api/attendance/checkin',(req,res)=>
    // check if all data exists (validation)
    if ( !child_name || ! arrival_time || ! data){
     return res.status(400).json({
-        error:'child_name,arrival_time,data are required'
+        error:'child_name,arrival_time,date are required'
         
     });
 
