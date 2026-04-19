@@ -44,6 +44,29 @@
 
 1.2 Functional Requirements  
 
+| ID | Requirement | CRUD Type | Actor |
+|----|-------------|-----------|-------|
+| FR1 | Teacher can record child arrival time | CREATE | Teacher |
+| FR2 | Teacher can record child departure time | UPDATE | Teacher |
+| FR3 | Teacher can view today's attendance list | READ | Teacher |
+| FR4 | Teacher can edit incorrect arrival/departure times | UPDATE | Teacher |
+| FR5 | Director can generate attendance report by date range | READ | Director |
+| FR6 | Director can download/print report for inspector | READ | Director |
+| FR7 | Parent can view their child's attendance status | READ | Parent |
+| FR8 | System prevents duplicate check-in (validation) | Validation | System |
+
+**CRUD Mapping:**  
+- **CREATE** → Check-in (arrival time)  
+- **READ** → View attendance, Generate reports, Parent view  
+- **UPDATE** → Check-out (departure time), Edit times  
+- **DELETE** → Not required (departure time marks the end of record)
+
+
+
+
+
+
+
 1.3 Non-functional Requirements  
 
 1.4 Data requirements 
