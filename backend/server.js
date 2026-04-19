@@ -12,6 +12,7 @@ const app = express();
 const port=3000;
 
 
+app.use(express.json());
 //When someone visits the main page, run this small function
 app.get('/', (req, res) => {
 
