@@ -85,12 +85,12 @@
 
 ## 🧑‍🤝‍🧑 Actors
 
-| Actor | Type |
-|-------|------|
-| Teacher | Primary |
-| Director | Primary |
-| Parent | Primary |
-| Inspector | Stakeholder (not direct actor) |
+| Actor | Type | Description |
+|-------|------|------|
+| Teacher | Primary |Records child arrival, departure, and edits attendance times |
+| Director | Primary |Generates and downloads attendance reports for inspectors |
+| Parent | Primary |Views their child's attendance status |
+| Inspector | Stakeholder|Reviews attendance reports (not a direct system user) |
 
 ---
 
@@ -100,14 +100,15 @@
 |----------|----------------|
 | Record Arrival | Teacher |
 | Record Departure | Teacher |
+| Edit Attendance Time | Teacher |
 | Generate Report | Director |
 | Download Report | Director |
 | View Child Status | Parent |
-| Edit Attendance Time | Teacher |
+
 
 ---
 
-## 🔗 Relationships
+## 🔗  Actor-Use Case Relationships
 
 | Actor | Use Case |
 |-------|----------|
@@ -122,36 +123,46 @@
 
 ## 📖 Detailed Use Cases
 
-### 1️⃣ Record Arrival
+### 1️⃣ Use Case: Record Arrival
 
-**Primary Actor:** Teacher
+| Element | Description |
+|---------|-------------|
+| Use Case Name | Record Arrival |
+| Primary Actor | Teacher |
+| Precondition | Child has not been checked in today |
+| Postcondition | Child's arrival time is recorded in the system |
 
 **Main Flow:**
 
 | Step | Action |
 |------|--------|
 | 1 | Teacher clicks **"Attendance"** tab |
-| 2 | System displays list of children with ON/OFF buttons (all OFF) |
+| 2 | System displays list of all children with OFF buttons (all children show as not check in). |
 | 3 | Teacher swipes a child's button **left→right** |
-| 4 | Button changes color to ON state |
-| 5 | System automatically saves current time as arrival time |
-| 6 | Teacher can see at a glance who has arrived |
+| 4 | Button changes color to ON state(green) |
+| 5 | System automatically saves current time as child's arrival time |
+| 6 | Teacher can see at a glance which children have arrived |
 
 ---
 
-### 2️⃣ Record Departure
+### 2️⃣ Use Case: Record Departure
 
-**Primary Actor:** Teacher
+| Element | Description |
+|---------|-------------|
+| Use Case Name | Record Departure |
+| Primary Actor | Teacher |
+| Precondition | Child is currently checked in (ON state) |
+| Postcondition | Child's departure time is recorded in the system |
 
 **Main Flow:**
 
 | Step | Action |
 |------|--------|
 | 1 | Teacher clicks **"Attendance"** tab |
-| 2 | System displays list of children with ON/OFF status visible |
-| 3 | Teacher swipes an ON child's button **right→left** |
-| 4 | Button returns to OFF state |
-| 5 | System automatically saves current time as departure time |
+| 2 | System displays list of all children with their current on/off status|
+| 3 | Teacher swipes a child who is ON  **right→left** |
+| 4 | The button returns to OFF state(red) |
+| 5 | System automatically saves current time as the child's departure time |
 
 **Exception Flow (No arrival record):**
 
@@ -163,9 +174,15 @@
 
 ---
 
-### 3️⃣ Edit Attendance Time
+### 3️⃣ Use Case : Edit Attendance Time
 
-**Primary Actor:** Teacher
+| Element | Description |
+|---------|-------------|
+| Use Case Name | Edit Attendance Time |
+| Primary Actor | Teacher |
+| Precondition | An attendance record exists for the child on the selected date |
+| Postcondition | The arrival and/or departure time is updated in the system |
+
 
 **Main Flow:**
 
@@ -179,9 +196,14 @@
 
 ---
 
-### 4️⃣ Generate Report
+### 4️⃣ Use Case : Generate Report
 
-**Primary Actor:** Director
+| Element | Description |
+|---------|-------------|
+| Use Case Name | Generate Report |
+| Primary Actor | Director |
+| Precondition | Director is logged into the system |
+| Postcondition | An attendance report is generated and displayed |
 
 **Main Flow:**
 
@@ -201,9 +223,14 @@
 
 ---
 
-### 5️⃣ Download Report
+### 5️⃣ Use Case : Download Report
 
-**Primary Actor:** Director
+| Element | Description |
+|---------|-------------|
+| Use Case Name | Download Report |
+| Primary Actor | Director |
+| Precondition | A report has been generated |
+| Postcondition | The report is downloaded as a file (printable format) |
 
 **Main Flow:**
 
@@ -222,16 +249,21 @@
 
 ---
 
-### 6️⃣ View Child Status
+### 6️⃣ Use Case:  View Child Status
 
-**Primary Actor:** Parent
+| Element | Description |
+|---------|-------------|
+| Use Case Name | View Child Status |
+| Primary Actor | Parent |
+| Precondition | Parent has a valid email address registered in the system |
+| Postcondition | Parent sees their child's attendance status for today |
 
 **Main Flow:**
 
 | Step | Action |
 |------|--------|
-| 1 | Parent logs in |
-| 2 | Parent selects their child from list |
+| 1 | Parent enters their email address.  |
+| 2 | System displays their child or children from the list. |
 | 3 | System displays: arrival time, departure time, current status |
 
 **Exception Flow (No record for today):**
