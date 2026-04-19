@@ -275,3 +275,26 @@
 
 ---
 
+## 2. CRUD Operations
+
+---
+
+## 3. System Architecture
+
+### 3.1 API Endpoints
+### 3.2 Tech Stack
+### 3.3 Database
+
+---
+
+## 4. Testing
+
+---
+
+## 5. Additional Features
+
+---
+
+## 6. Attributions
+
+
