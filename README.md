@@ -1,7 +1,10 @@
 
 **Student Name:** Huiseon Yi 
+
 **Student Number:**  10599161
+
 **Module:** Advanced Programming (B8IT150)
+
 **Lecturer:** Paul Laird
 
 ---
