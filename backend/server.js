@@ -37,7 +37,7 @@ app.post('/api/attendance/checkin',(req,res)=>
 
    res.json({
     message:'Validation passed!',
-    received: {child_name,arrival_time,date}
+    received: {child_name,arrival_time,data}
    });
 });
 
