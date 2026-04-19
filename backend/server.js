@@ -22,5 +22,5 @@ app.get('/', (req, res) => {
 // Start the server
 app.listen(port,()=>{
     console.log("Server is running"); // Show in terminal
-    console.log(` Express server runing at http://localhost:${3000}`); // Show address 
+    console.log(` Express server runing at http://localhost:${port}`); // Show address 
 });
