@@ -20,7 +20,7 @@ app.get('/', (req, res) => {
     res.send("Hello World!");
 });
 
-// create : check-in
+// create (post) Adds new data : check-in
 app.post('/api/attendance/checkin',(req,res)=>
 {
     // receice data from client 
@@ -60,6 +60,55 @@ app.post('/api/attendance/checkin',(req,res)=>
 });
 
 });
+
+
+
+
+
+
+// Update (put) Modifies exiting data : check-out
+app.put('/api/attendance/checkout',(req,res)=>
+{
+    // receice data from client 
+   const {departure_time}=req.body;
+
+   // 1. check if all data exists (validation)
+   if ( !departure_time){
+
+    //"Bad Request" error (400)
+    return res.status(400).json({
+        error:'depart_time is required'
+        
+    });
+
+   }
+
+   // 2. Save to database 
+                
+   const updatesql=`UPDATE attendance SET (depart_time)VALUES(?,?,?);`
+   
+   //Run the SQL query with the actual values
+   db.run(sql,[child_name,arrival_time,date],function(err){
+
+    //If database error occurs, send 500 server error.
+    if(err){
+        return res.status(500).json({error:err.message})
+    }
+
+   //If successful, send back 201 (created) with the new data and success message.
+   res.status(201).json({
+    id:this.lastID,
+    child_name,
+    arrival_time,
+    date,
+    message:'✅ Check-in successful'
+   });
+});
+
+
+
+
+
 
 
 // Start the server
