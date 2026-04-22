@@ -20,13 +20,13 @@ app.get('/', (req, res) => {
     res.send("Hello World!");
 });
 
-// create (post) Adds new data : check-in
+// 1.create (post) Adds new data : check-in
 app.post('/api/attendance/checkin',(req,res)=>
 {
     // receice data from client 
    const {child_name,arrival_time,date}=req.body;
 
-   // 1. check if all data exists (validation)
+   // 1.1 check if all data exists (validation)
    if ( !child_name || ! arrival_time || ! date){
 
     //"Bad Request" error (400)
@@ -37,12 +37,13 @@ app.post('/api/attendance/checkin',(req,res)=>
 
    }
 
-   // 2. Save to database 
+   // 1.2 Save to database 
                 //The ? symbols are placeholders that keep the database safe from hackers (SQL injection).
    const sql=`INSERT INTO attendance(child_name,arrival_time,date)VALUES(?,?,?);`
    
    //Run the SQL query with the actual values
-   db.run(sql,[child_name,arrival_time,date],function(err){
+        //db.run "writing" or "modifying (INSERT,UPDATE,DELETE)
+   db.run(sql,[child_name,arrival_time,date],function(err){ //Callback Function,asynchronous
 
     //If database error occurs, send 500 server error.
     if(err){
@@ -66,39 +67,99 @@ app.post('/api/attendance/checkin',(req,res)=>
 
 
 
-// Update (put) Modifies exiting data : check-out
-app.put('/api/attendance/checkout',(req,res)=>
+// 2.Update (put) Modifies exiting data : check-out
+app.put('/api/attendance/checkout/:id',(req,res)=> 
 {
-    // receice data from client 
-   const {departure_time}=req.body;
+    
+    const {id}=req.params; // UPDATED: Get ID from URL //req.params = WHO/WHICH (identifier)
+    const {departure_time }=req.body; //req.body = WHAT (data/value)
 
-   // 1. check if all data exists (validation)
-   if ( !departure_time){
+   // 1.input validation
+   if ( !departure_time ){
 
     //"Bad Request" error (400)
     return res.status(400).json({
-        error:'depart_time is required'
+        error:'departure_time is required(format:HH:MM)' // HH (Hours),MM (Minutes)
         
     });
 
    }
 
-   // 2. Save to database 
-                
-   const updatesql=`UPDATE attendance SET (depart_time) WHERE;`
+   // 2. check if record exists (select query) 
+   // Before updating, first check if there is an attendance record with the given ID. 
+   // The ? is a placeholder for the id value 
+
+    const checksql=`SELECT*FROM attendance WHERE id=?`;
+
+//db.get returns a single Object
+
+// err (The Error Object)
+// Callback Function,asynchronous
+// It allows us to handle technical failures instead of letting the whole server crash.
+
+
+//row (The Result Object):
+    // This gives us access to the actual data so we can check if the person has already checked out
+    // db.get "reading" data (SELECT),
+
+    db.get(checksql,[id],(err,row)=>{ 
+
+  
+ //3. database error occurs, send 500 server error.
+     if(err){
+        return res.status(500).json({error:err.message});
+    }
+
+ 
+//4. Record not found (404)
+    // if no record exists with this id, row will be underfined/null
+    // return 404 Not Found error 
+
+     if(!row){
+        return res.status(404).json({error:`Attendance record with id ${id} not found`});
+    }
+
+
+// 5. prevent dupulicate check-out 
+    // if the record already has a departure_time(already checked out)
+    // Return 400 Bad request error to prevent double check-out
+
+    if(row.departure_time){
+      return res.status(400).json({error:`Already checked out at ${row.departure_time} `});
+    }
+
+//6. update query     
+        const updatesql=`UPDATE attendance SET departure_time=? WHERE id=?;`
    
    //Run the SQL query with the actual values
-   db.run(updatesql,[departure_time],function(err){
+   db.run(updatesql,[departure_time,id],function(err){
 
-    //If database error occurs, send 500 server error.
+//7.  database error occurs, send 500 server error.
     if(err){
         return res.status(500).json({error:err.message})
     }
 
-   //If successful, send back 200 (update) with the new data and success message.
+//8. fetch the updated record 
+    // after successful update, query the database again to get 
+    // the complte updated record ( including arrival_time)
+
+    db.get(`SELECT*FROM attendance WHERE id=?`,[id],(err,updatedRow)=>{
+
+//9 error after update 
+ if(err){
+    return res.status(500).json({error:err.message});
+ }        
+
+
+// 10. successful, send back 200 (update) with the new data and success message.
    res.status(200).json({
-    message:'✅ Check-out successful'
+    success:true,
+    message:'✅ Check-out successful',
+    record:updatedRow
    });
+            });
+        });
+    });
 });
 
 
