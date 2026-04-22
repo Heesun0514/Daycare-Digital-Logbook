@@ -95,13 +95,9 @@ app.put('/api/attendance/checkout',(req,res)=>
         return res.status(500).json({error:err.message})
     }
 
-   //If successful, send back 201 (created) with the new data and success message.
-   res.status(201).json({
-    id:this.lastID,
-    child_name,
-    arrival_time,
-    date,
-    message:'✅ Check-in successful'
+   //If successful, send back 200 (update) with the new data and success message.
+   res.status(200).json({
+    message:'✅ Check-out successful'
    });
 });
 
