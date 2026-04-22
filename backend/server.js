@@ -164,6 +164,23 @@ app.put('/api/attendance/checkout/:id',(req,res)=>
 
 
 
+/*
+
+curl -X PUT http://localhost:3000/api/attendance/checkout/2 \
+  -H "Content-Type: application/json" \
+  -d '{"departure_time":"17:00"}'
+{"success":true,"message":"✅ Check-out successful","record":{"id":2,"child_name":"Tommy","arrival_time":"09:00","departure_time":"17:00","date":"2026-04-19"}}%                    
+
+
+user@MacBookAir backend % curl -X PUT http://localhost:3000/api/attendance/checkout/2 \
+  -H "Content-Type: application/json" \
+  -d '{"departure_time":"17:00"}'
+{"error":"Already checked out at 17:00 "}%                  
+
+*/ 
+
+
+
 
 
 
