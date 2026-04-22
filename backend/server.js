@@ -85,10 +85,10 @@ app.put('/api/attendance/checkout',(req,res)=>
 
    // 2. Save to database 
                 
-   const updatesql=`UPDATE attendance SET (depart_time)VALUES(?,?,?);`
+   const updatesql=`UPDATE attendance SET (depart_time) WHERE;`
    
    //Run the SQL query with the actual values
-   db.run(sql,[child_name,arrival_time,date],function(err){
+   db.run(updatesql,[departure_time],function(err){
 
     //If database error occurs, send 500 server error.
     if(err){
