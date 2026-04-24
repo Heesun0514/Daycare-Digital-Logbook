@@ -74,7 +74,7 @@ app.put('/api/attendance/checkout/:id',(req,res)=>
     const {id}=req.params; // UPDATED: Get ID from URL //req.params = WHO/WHICH (identifier)
     const {departure_time }=req.body; //req.body = WHAT (data/value)
 
-   // 1.input validation
+   // 2.1 input validation
    if ( !departure_time ){
 
     //"Bad Request" error (400)
@@ -85,7 +85,7 @@ app.put('/api/attendance/checkout/:id',(req,res)=>
 
    }
 
-   // 2. check if record exists (select query) 
+   // 2.2 check if record exists (select query) 
    // Before updating, first check if there is an attendance record with the given ID. 
    // The ? is a placeholder for the id value 
 
@@ -105,13 +105,13 @@ app.put('/api/attendance/checkout/:id',(req,res)=>
     db.get(checksql,[id],(err,row)=>{ 
 
   
- //3. database error occurs, send 500 server error.
+ //2.3 database error occurs, send 500 server error.
      if(err){
         return res.status(500).json({error:err.message});
     }
 
  
-//4. Record not found (404)
+//2.4. Record not found (404)
     // if no record exists with this id, row will be underfined/null
     // return 404 Not Found error 
 
@@ -120,7 +120,7 @@ app.put('/api/attendance/checkout/:id',(req,res)=>
     }
 
 
-// 5. prevent dupulicate check-out 
+// 2.5 prevent dupulicate check-out 
     // if the record already has a departure_time(already checked out)
     // Return 400 Bad request error to prevent double check-out
 
@@ -128,30 +128,30 @@ app.put('/api/attendance/checkout/:id',(req,res)=>
       return res.status(400).json({error:`Already checked out at ${row.departure_time} `});
     }
 
-//6. update query     
+//2.6 update query     
         const updatesql=`UPDATE attendance SET departure_time=? WHERE id=?;`
    
    //Run the SQL query with the actual values
    db.run(updatesql,[departure_time,id],function(err){
 
-//7.  database error occurs, send 500 server error.
+//2.7 database error occurs, send 500 server error.
     if(err){
         return res.status(500).json({error:err.message})
     }
 
-//8. fetch the updated record 
+//2.8 fetch the updated record 
     // after successful update, query the database again to get 
     // the complte updated record ( including arrival_time)
 
     db.get(`SELECT*FROM attendance WHERE id=?`,[id],(err,updatedRow)=>{
 
-//9 error after update 
+//2.9 error after update 
  if(err){
     return res.status(500).json({error:err.message});
  }        
 
 
-// 10. successful, send back 200 (update) with the new data and success message.
+//2.10 successful, send back 200 (update) with the new data and success message.
    res.status(200).json({
     success:true,
     message:'✅ Check-out successful',
@@ -161,7 +161,6 @@ app.put('/api/attendance/checkout/:id',(req,res)=>
         });
     });
 });
-
 
 
 /*
@@ -178,6 +177,51 @@ user@MacBookAir backend % curl -X PUT http://localhost:3000/api/attendance/check
 {"error":"Already checked out at 17:00 "}%                  
 
 */ 
+
+
+//3.Edit Attendance Time
+
+app.put('/api/attendance/:id',(req,res)=>
+{
+    // receice data from client 
+   const {id}=req.params;
+   const {arrival_time,departure_time,date}=req.body;
+
+   // 3.1 check if at least one data exists (validation)
+   if ( !arrival_time && ! departure_time && ! date){
+
+    //"Bad Request" error (400)
+    return res.status(400).json({
+        error:'At least one field (arrival_time,departure_time, or date) is required for update'
+        
+    });
+
+   }
+
+   // 1.2 Save to database 
+                //The ? symbols are placeholders that keep the database safe from hackers (SQL injection).
+   const sql=`INSERT INTO attendance(child_name,arrival_time,date)VALUES(?,?,?);`
+   
+   //Run the SQL query with the actual values
+        //db.run "writing" or "modifying (INSERT,UPDATE,DELETE)
+   db.run(sql,[child_name,arrival_time,date],function(err){ //Callback Function,asynchronous
+
+    //If database error occurs, send 500 server error.
+    if(err){
+        return res.status(500).json({error:err.message})
+    }
+
+   //If successful, send back 201 (created) with the new data and success message.
+   res.status(201).json({
+    id:this.lastID,
+    child_name,
+    arrival_time,
+    date,
+    message:'✅ Check-in successful'
+   });
+});
+
+});
 
 
 
