@@ -197,6 +197,89 @@ app.put('/api/attendance/:id',(req,res)=>
     });
 
    }
+   // 3.2 check if record exists (select query) 
+   // Before updating, first check if there is an attendance record with the given ID. 
+   // The ? is a placeholder for the id value 
+
+    const checksql=`SELECT*FROM attendance WHERE id=?`;
+
+//db.get returns a single Object
+
+// err (The Error Object)
+// Callback Function,asynchronous
+// It allows us to handle technical failures instead of letting the whole server crash.
+
+
+//row (The Result Object):
+    // This gives us access to the actual data so we can check if the person has already checked out
+    // db.get "reading" data (SELECT),
+
+    db.get(checksql,[id],(err,row)=>{ 
+
+  
+ //2.3 database error occurs, send 500 server error.
+     if(err){
+        return res.status(500).json({error:err.message});
+    }
+
+ 
+//2.4. Record not found (404)
+    // if no record exists with this id, row will be underfined/null
+    // return 404 Not Found error 
+
+     if(!row){
+        return res.status(404).json({error:`Attendance record with id ${id} not found`});
+    }
+
+    
+
+//2.6 update query     
+        const updatesql=`UPDATE attendance SET departure_time=? WHERE id=?;`
+   
+   //Run the SQL query with the actual values
+   db.run(updatesql,[departure_time,id],function(err){
+
+//2.7 database error occurs, send 500 server error.
+    if(err){
+        return res.status(500).json({error:err.message})
+    }
+
+//2.8 fetch the updated record 
+    // after successful update, query the database again to get 
+    // the complte updated record ( including arrival_time)
+
+    db.get(`SELECT*FROM attendance WHERE id=?`,[id],(err,updatedRow)=>{
+
+//2.9 error after update 
+ if(err){
+    return res.status(500).json({error:err.message});
+ }        
+
+
+//2.10 successful, send back 200 (update) with the new data and success message.
+   res.status(200).json({
+    success:true,
+    message:'✅ Check-out successful',
+    record:updatedRow
+   });
+            });
+        });
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
    // 1.2 Save to database 
                 //The ? symbols are placeholders that keep the database safe from hackers (SQL injection).
