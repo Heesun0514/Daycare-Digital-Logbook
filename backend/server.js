@@ -288,19 +288,21 @@ Values: [arrival_time="08:30", departure_time=undefined, date=undefined]
  if ( departure_time !== undefined){
        //Add " column_name=?"" format 
     updateFields.push('depature_time=?');
- }
-        //Add actual value to values array 
+    //Add actual value to values array 
     updateValues.push(departure_time);
+ }
+        
 
 
 // 3.5.5 Check if date was provided 
- if ( departure_time_time !== undefined){
+ if ( date !== undefined){
        //Add " column_name=?"" format 
     updateFields.push('date=?');
- }
+
         //Add actual value to values array 
     updateValues.push(date);
 
+ }
 
 //3.5.6 Add ID for WHERE clause to values array 
 
