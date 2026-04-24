@@ -285,7 +285,7 @@ Values: [arrival_time="08:30", departure_time=undefined, date=undefined]
         
 
  // 3.5.4 Check if depature_time was provided 
- if ( departure_time_time !== undefined){
+ if ( departure_time !== undefined){
        //Add " column_name=?"" format 
     updateFields.push('depature_time=?');
  }
