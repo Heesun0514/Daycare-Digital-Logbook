@@ -232,13 +232,86 @@ app.put('/api/attendance/:id',(req,res)=>
         return res.status(404).json({error:`Attendance record with id ${id} not found`});
     }
 
-
+/* 
 
 //3.5 update query     
         const updatesql=`UPDATE attendance SET arrival_time,departure_time,date=? WHERE id=?;`
    
    //Run the SQL query with the actual values
    db.run(updatesql,[arrival_time,departure_time,date],function(err){
+
+# Edit ONLY arrival time (change to 08:30)
+curl -X PUT http://localhost:3000/api/attendance/2 \
+  -H "Content-Type: application/json" \
+  -d '{"arrival_time":"08:30"}'
+
+result
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot PUT /api/attendance/2</pre>
+</body>
+</html>
+user@MacBookAir backend %
+
+
+why this doesn't work 
+
+Forces ALL fields to update-->Data Loss Occurs
+Values: [arrival_time="08:30", departure_time=undefined, date=undefined]
+*/
+
+//3.5 Dynamic UPDATE   
+
+ // 3.5.1 create empty array - storage for field names to update 
+ let updateFields =[];
+
+ // 3.5.2 create empty array - storage for actual values 
+
+ let updateValues=[];
+
+ // 3.5.3 Check if arrival_time was provided 
+ if ( arrival_time !== undefined){
+       //Add " column_name=?"" format 
+    updateFields.push('arrival_time=?');
+ }
+        //Add actual value to values array 
+    updateValues.push(arrival_time);
+
+ // 3.5.4 Check if depature_time was provided 
+ if ( departure_time_time !== undefined){
+       //Add " column_name=?"" format 
+    updateFields.push('depature_time=?');
+ }
+        //Add actual value to values array 
+    updateValues.push(departure_time);
+
+
+// 3.5.5 Check if date was provided 
+ if ( departure_time_time !== undefined){
+       //Add " column_name=?"" format 
+    updateFields.push('date=?');
+ }
+        //Add actual value to values array 
+    updateValues.push(date);
+
+
+//3.5.6 Add ID for WHERE clause to values array 
+
+updateValues.push(id);
+
+
+//3.5.7 Dynamically build SQL statement
+
+const updatesql=`UPDATE attendance SET ${updateFields.join(',')} WHERE id=?;`
+
+//3.5.8 Run the SQL query with the actual values
+   db.run(updatesql,updateValues,function(err){
 
 //3.6 database error occurs, send 500 server error.
     if(err){
@@ -267,34 +340,6 @@ app.put('/api/attendance/:id',(req,res)=>
         });
     });
 });
-
-
-
-/* # Edit ONLY arrival time (change to 08:30)
-curl -X PUT http://localhost:3000/api/attendance/2 \
-  -H "Content-Type: application/json" \
-  -d '{"arrival_time":"08:30"}'
-
-result
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<title>Error</title>
-</head>
-<body>
-<pre>Cannot PUT /api/attendance/2</pre>
-</body>
-</html>
-user@MacBookAir backend %
-
-
-*/
-
-
-
-
 
 
 
