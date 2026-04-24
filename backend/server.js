@@ -20,6 +20,8 @@ app.get('/', (req, res) => {
     res.send("Hello World!");
 });
 
+
+
 // 1.create (post) Adds new data : check-in
 app.post('/api/attendance/checkin',(req,res)=>
 {
@@ -180,7 +182,7 @@ user@MacBookAir backend % curl -X PUT http://localhost:3000/api/attendance/check
 */ 
 
 
-//3.Edit Attendance Time
+//3.Update (put) : Edit Attendance Time
 
 app.put('/api/attendance/:id',(req,res)=>
 {
@@ -355,9 +357,60 @@ user@MacBookAir backend % curl -X PUT http://localhost:3000/api/attendance/2 \
 
 
 
+//4. Read (get): generate report 
+
+app.get('/api/attendance/report',(req,res)=>{
+
+})
+
+// query 
+
+from , to 
+
+// validation 
 
 
+if (!from || ! to) {
+    return res.status(400).json({
+        error:'Both "from" and "to" dates are requried'
+    });
+}
 
+// SQL query 
+
+const sql=`
+        SELECT * FROM attendance 
+        where   date BETWEEN ? AND ?
+        ORDER BY date ASC, child_name ASC 
+    `
+
+db.get(sql,[from,to],(err,row)=>{ 
+
+  
+ //3.3 database error occurs, send 500 server error.
+     if(err){
+        return res.status(500).json({error:err.message});
+    }
+
+ 
+//3.4. Record not found (404)
+    // if no record exists with this id, row will be underfined/null
+    // return 404 Not Found error 
+
+     if(!row){
+        return res.status(404).json({error:`No attendance record found from ${from} to ${to}`});
+    }
+
+
+ res.status(200).json({
+    success:true,
+    message:`✅ Report generated for ${from} to ${to}`,
+    record:rows
+
+
+    
+
+    
 
 // Start the server
 app.listen(port,()=>{
