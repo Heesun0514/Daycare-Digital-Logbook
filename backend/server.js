@@ -306,7 +306,7 @@ Values: [arrival_time="08:30", departure_time=undefined, date=undefined]
 
 //3.5.6 Add ID for WHERE clause to values array 
 
-    updateValues.push(id);
+updateValues.push(id);
 
 
 //3.5.7 Dynamically build SQL statement
@@ -344,7 +344,14 @@ const updatesql=`UPDATE attendance SET ${updateFields.join(',')} WHERE id=?;`
     });
 });
 
+/*
 
+user@MacBookAir backend % curl -X PUT http://localhost:3000/api/attendance/2 \
+  -H "Content-Type: application/json" \
+  -d '{"arrival_time":"08:30"}'
+{"success":true,"message":"✅ Attendance record updated successfully","record":{"id":2,"child_name":"Tommy","arrival_time":"08:30","departure_time":"17:00","date":"2026-04-19"}}%     
+
+*/
 
 
 
