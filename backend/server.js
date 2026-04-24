@@ -270,42 +270,33 @@ app.put('/api/attendance/:id',(req,res)=>
 
 
 
+/* # Edit ONLY arrival time (change to 08:30)
+curl -X PUT http://localhost:3000/api/attendance/2 \
+  -H "Content-Type: application/json" \
+  -d '{"arrival_time":"08:30"}'
+
+result
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot PUT /api/attendance/2</pre>
+</body>
+</html>
+user@MacBookAir backend %
+
+
+*/
 
 
 
 
 
 
-
-
-
-
-
-
-   // 1.2 Save to database 
-                //The ? symbols are placeholders that keep the database safe from hackers (SQL injection).
-   const sql=`INSERT INTO attendance(child_name,arrival_time,date)VALUES(?,?,?);`
-   
-   //Run the SQL query with the actual values
-        //db.run "writing" or "modifying (INSERT,UPDATE,DELETE)
-   db.run(sql,[child_name,arrival_time,date],function(err){ //Callback Function,asynchronous
-
-    //If database error occurs, send 500 server error.
-    if(err){
-        return res.status(500).json({error:err.message})
-    }
-
-   //If successful, send back 201 (created) with the new data and success message.
-   res.status(201).json({
-    id:this.lastID,
-    child_name,
-    arrival_time,
-    date,
-    message:'✅ Check-in successful'
-   });
-});
-
-});
 
 
 
