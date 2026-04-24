@@ -128,6 +128,7 @@ app.put('/api/attendance/checkout/:id',(req,res)=>
       return res.status(400).json({error:`Already checked out at ${row.departure_time} `});
     }
 
+
 //2.6 update query     
         const updatesql=`UPDATE attendance SET departure_time=? WHERE id=?;`
    
@@ -217,13 +218,13 @@ app.put('/api/attendance/:id',(req,res)=>
     db.get(checksql,[id],(err,row)=>{ 
 
   
- //2.3 database error occurs, send 500 server error.
+ //3.3 database error occurs, send 500 server error.
      if(err){
         return res.status(500).json({error:err.message});
     }
 
  
-//2.4. Record not found (404)
+//3.4. Record not found (404)
     // if no record exists with this id, row will be underfined/null
     // return 404 Not Found error 
 
@@ -231,26 +232,26 @@ app.put('/api/attendance/:id',(req,res)=>
         return res.status(404).json({error:`Attendance record with id ${id} not found`});
     }
 
-    
 
-//2.6 update query     
-        const updatesql=`UPDATE attendance SET departure_time=? WHERE id=?;`
+
+//3.5 update query     
+        const updatesql=`UPDATE attendance SET arrival_time,departure_time,date=? WHERE id=?;`
    
    //Run the SQL query with the actual values
-   db.run(updatesql,[departure_time,id],function(err){
+   db.run(updatesql,[arrival_time,departure_time,date],function(err){
 
-//2.7 database error occurs, send 500 server error.
+//3.6 database error occurs, send 500 server error.
     if(err){
         return res.status(500).json({error:err.message})
     }
 
-//2.8 fetch the updated record 
+//3.7 fetch the updated record 
     // after successful update, query the database again to get 
     // the complte updated record ( including arrival_time)
 
     db.get(`SELECT*FROM attendance WHERE id=?`,[id],(err,updatedRow)=>{
 
-//2.9 error after update 
+//3.8 error after update 
  if(err){
     return res.status(500).json({error:err.message});
  }        
@@ -259,7 +260,7 @@ app.put('/api/attendance/:id',(req,res)=>
 //2.10 successful, send back 200 (update) with the new data and success message.
    res.status(200).json({
     success:true,
-    message:'✅ Check-out successful',
+    message:'✅ Attendance record updated successfully',
     record:updatedRow
    });
             });
