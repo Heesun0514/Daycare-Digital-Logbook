@@ -290,7 +290,7 @@ Values: [arrival_time="08:30", departure_time=undefined, date=undefined]
  // 3.5.4 Check if depature_time was provided 
  if ( departure_time !== undefined){
        //Add " column_name=?"" format 
-    updateFields.push('depature_time=?');
+    updateFields.push('departure_time=?');
     //Add actual value to values array 
     updateValues.push(departure_time);
  }
@@ -408,7 +408,10 @@ db.all(sql,[from,to],(err,rows)=>{
     // return 404 Not Found error 
 
      if(!rows){
-        return res.status(404).json({error:`No attendance record found from ${from} to ${to}`});
+        return res.status(404).json({
+            message: `No attendance record found from ${from} to ${to}`,
+       
+    });
     }
 
 
@@ -417,9 +420,9 @@ db.all(sql,[from,to],(err,rows)=>{
     message:`✅ Report generated for ${from} to ${to}`,
     record:rows
 
-
-    
-})
+});
+});
+});
     
 
 // Start the server
