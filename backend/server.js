@@ -386,7 +386,7 @@ if (!from || ! to) {
     
 
 
-// SQL query 
+// 4.4 SQL query 
 
 const sql=`
         SELECT * FROM attendance 
@@ -397,16 +397,13 @@ const sql=`
 db.all(sql,[from,to],(err,rows)=>{ 
 
   
- //3.3 database error occurs, send 500 server error.
+ //4.4.1 database error occurs, send 500 server error.
      if(err){
         return res.status(500).json({error:err.message});
     }
 
  
-//3.4. Record not found (404)
-    // if no record exists with this id, row will be underfined/null
-    // return 404 Not Found error 
-
+//4.4.2 check if any records found 
      if(!rows){
         return res.status(404).json({
             message: `No attendance record found from ${from} to ${to}`,
