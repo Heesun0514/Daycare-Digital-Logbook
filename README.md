@@ -277,7 +277,7 @@
 
 ---
 
-##### 7️⃣ Use Case: View Today's Attendance List
+### 7️⃣ Use Case: View Today's Attendance List
 
 | Element | Description |
 |---------|-------------|

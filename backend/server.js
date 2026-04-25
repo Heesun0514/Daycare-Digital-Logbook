@@ -167,7 +167,7 @@ app.put('/api/attendance/checkout/:id',(req,res)=>
 
 
 /*
-
+how to test using Chatgpt
 curl -X PUT http://localhost:3000/api/attendance/checkout/2 \
   -H "Content-Type: application/json" \
   -d '{"departure_time":"17:00"}'
@@ -242,6 +242,7 @@ app.put('/api/attendance/:id',(req,res)=>
    //Run the SQL query with the actual values
    db.run(updatesql,[arrival_time,departure_time,date],function(err){
 
+how to test using Chatgpt
 # Edit ONLY arrival time (change to 08:30)
 curl -X PUT http://localhost:3000/api/attendance/2 \
   -H "Content-Type: application/json" \
@@ -348,6 +349,7 @@ const updatesql=`UPDATE attendance SET ${updateFields.join(',')} WHERE id=?;`
 
 /*
 
+how to test using Chatgpt
 user@MacBookAir backend % curl -X PUT http://localhost:3000/api/attendance/2 \
   -H "Content-Type: application/json" \
   -d '{"arrival_time":"08:30"}'
