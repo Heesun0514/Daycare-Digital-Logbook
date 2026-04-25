@@ -365,17 +365,15 @@ app.get('/api/attendance/report',(req,res)=>{
 
 // 4.1 Get query parameters from URL
     // req.query.filtering, sorting, or searching data.
+const {from,to} = req.query;
 
-const={from,to} = req.query;
-
-// validation 
-
-
+// 4.2 Input validation 
 if (!from || ! to) {
     return res.status(400).json({
         error:'Both "from" and "to" dates are requried'
     });
 }
+
 
 // SQL query 
 
@@ -385,7 +383,7 @@ const sql=`
         ORDER BY date ASC, child_name ASC 
     `
 
-db.get(sql,[from,to],(err,row)=>{ 
+db.all(sql,[from,to],(err,rows)=>{ 
 
   
  //3.3 database error occurs, send 500 server error.
@@ -398,7 +396,7 @@ db.get(sql,[from,to],(err,row)=>{
     // if no record exists with this id, row will be underfined/null
     // return 404 Not Found error 
 
-     if(!row){
+     if(!rows){
         return res.status(404).json({error:`No attendance record found from ${from} to ${to}`});
     }
 
