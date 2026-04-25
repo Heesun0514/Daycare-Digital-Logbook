@@ -363,11 +363,10 @@ user@MacBookAir backend % curl -X PUT http://localhost:3000/api/attendance/2 \
 
 app.get('/api/attendance/report',(req,res)=>{
 
-})
+// 4.1 Get query parameters from URL
+    // req.query.filtering, sorting, or searching data.
 
-// query 
-
-from , to 
+const={from,to} = req.query;
 
 // validation 
 
@@ -411,7 +410,7 @@ db.get(sql,[from,to],(err,row)=>{
 
 
     
-
+})
     
 
 // Start the server
