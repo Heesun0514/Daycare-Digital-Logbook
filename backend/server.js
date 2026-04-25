@@ -375,7 +375,9 @@ if (!from || ! to) {
 }
 
 //4.3 Date format Validation (DD-MM-YYYY)
+    //Uses a Regular Expression (Regex) to ensure the dates follow the DD-MM-YYYY format.
 
+    const dateRegex = /^\d{2}-\d{2}-\d{4}$/;
     if (!dateRegex.test(from) || !dateRegex.test(to)) {
         return res.status(400).json({
             error: 'Invalid date format. Use DD-MM-YYYY. Example: 24-04-2026'
