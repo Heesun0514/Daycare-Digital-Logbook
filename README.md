@@ -101,6 +101,7 @@
 | Record Arrival | Teacher |
 | Record Departure | Teacher |
 | Edit Attendance Time | Teacher |
+| View Today's Attendance List | Teacher |
 | Generate Report | Director |
 | Download Report | Director |
 | View Child Status | Parent |
@@ -115,6 +116,7 @@
 | Teacher | Record Arrival |
 | Teacher | Record Departure |
 | Teacher | Edit Attendance Time |
+| Teacher | View Today's Attendance List |
 | Director | Generate Report |
 | Director | Download Report (extends Generate Report) |
 | Parent | View Child Status |
@@ -274,6 +276,34 @@
 | 2 | System shows: *"No attendance recorded for today yet."* |
 
 ---
+
+##### 7️⃣ Use Case: View Today's Attendance List
+
+| Element | Description |
+|---------|-------------|
+| Use Case Name | View Today's Attendance List |
+| Primary Actor | Teacher |
+| Precondition | Teacher is logged into the system |
+| Postcondition | Teacher sees all children and their current check-in status |
+
+**Main Flow:**
+
+| Step | Action |
+|------|--------|
+| 1 | Teacher clicks **"Attendance"** tab |
+| 2 | System displays list of all children |
+| 3 | For each child, system shows: name, arrival time (if checked in), current status (ON/OFF) |
+| 4 | Children who have arrived appear with **green (ON)** status |
+| 5 | Children not yet arrived appear with **red (OFF)** status |
+| 6 | List automatically refreshes every 30 seconds |
+
+**Exception Flow (No children enrolled):**
+
+| Step | Action |
+|------|--------|
+| 1 | If no children are enrolled in the system |
+| 2 | System shows: *"No children found. Please contact director."* |
+
 
 ## 2. CRUD Operations
 
