@@ -336,7 +336,7 @@ const updatesql=`UPDATE attendance SET ${updateFields.join(',')} WHERE id=?;`
  }        
 
 
-//2.10 successful, send back 200 (update) with the new data and success message.
+//3.10 successful, send back 200 (update) with the new data and success message.
    res.status(200).json({
     success:true,
     message:'✅ Attendance record updated successfully',
@@ -404,8 +404,8 @@ db.all(sql,[from,to],(err,rows)=>{
 
  
 //4.4.2 check if any records found 
-     if(!rows){
-        return res.status(404).json({
+     if(rows===0){
+        return res.status(200).json({
             message: `No attendance record found from ${from} to ${to}`,
        
     });
