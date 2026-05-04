@@ -355,7 +355,7 @@
   - curl commands would only be "manual testing", not "unit testing"
   
 
-  ### 4.2 INSTALLATION (already done):
+  ### 4.2 INSTALLATION:
 
   * npm install --save-dev jest supertest
   
