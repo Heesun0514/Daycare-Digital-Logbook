@@ -328,7 +328,56 @@
 
 ## 4. Testing
 
----
+ ============================================================================
+ TESTING STRATEGY & TOOL SELECTION
+ ============================================================================
+  
+ WHY JEST INSTEAD OF CURL COMMANDS?
+ ---------------------------------
+ 
+ Issue with curl commands in comments:
+   1. ❌ Hard to read - long command strings with escape characters
+   2. ❌ No syntax highlighting - terminal output mixed with code
+   3. ❌ Manual verification - must visually compare expected vs actual
+   4. ❌ No automation - cannot run all tests with one command
+   5. ❌ No CI/CD - cannot integrate with GitHub Actions
+   6. ❌ No coverage report - cannot measure what code is tested
+ 
+ Jest + Supertest advantages:
+  1. ✅ Readable - clear test() blocks with descriptive names
+  2. ✅ Syntax highlighting - VS Code shows test runner UI
+  3. ✅ Automated - expect() assertions automatically verify results
+  4. ✅ One-command - "npm test" runs ALL tests instantly
+  5. ✅ CI/CD ready - can run on GitHub Actions automatically
+  6. ✅ Coverage reports - shows untested lines of code
+  
+  For this assignment :
+  - "Testing should at a minimum include unit tests" → Jest provides REAL unit tests
+  - "Integration test where front and backend interact" → Supertest can test full API flow
+  - curl commands would only be "manual testing", not "unit testing"
+  
+  ============================================================================
+  INSTALLATION (already done):
+  ============================================================================
+  npm install --save-dev jest supertest
+  
+  ============================================================================
+  RUN TESTS:
+  ============================================================================
+  npm test                 # Run all tests once
+  npm run test:watch      # Auto-run on file changes
+  npm test -- --coverage  # Show coverage report
+  
+  ============================================================================
+  TEST STRUCTURE:
+  ============================================================================
+  backend/
+  ├── tests/
+  │   └── attendance.test.js    # All CRUD operation tests
+  ├── server.js                  # API endpoints
+  └── package.json               # "test": "jest" script added
+ 
+  
 
 ## 5. Additional Features
 
