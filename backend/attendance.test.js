@@ -483,3 +483,75 @@ describe('✅ CHECK-IN (CREATE) Tests',()=>{
 
 });
 });
+
+
+
+// ------------------------------------------------------------
+// 2. CHECK-OUT (UPDATE) Tests
+// ------------------------------------------------------------
+
+
+describe('✅ CHECK-OUT (UPDATE) Tests', () => {
+    
+    // Helper function to create a test check-in
+    async function createCheckin(name = 'Tommy', time = '09:00', date = '2026-05-04') {
+        return await request(app)
+            .post('/api/attendance/checkin')
+            .send({ child_name: name, arrival_time: time, date });
+    }
+
+    test('TC-05: Success - Valid check-out', async () => {
+        // 1. Create check-in first
+        const checkinRes = await createCheckin();
+        const id = checkinRes.body.id;
+        
+        // 2. Execute check-out
+        const response = await request(app)
+            .put(`/api/attendance/checkout/${id}`)
+            .send({ departure_time: '17:00' });
+        
+        expect(response.statusCode).toBe(200);
+        expect(response.body.success).toBe(true);
+        expect(response.body.record.departure_time).toBe('17:00');
+    });
+
+    test('TC-06: Fail - Non-existent ID', async () => {
+        const response = await request(app)
+            .put('/api/attendance/checkout/99999')
+            .send({ departure_time: '17:00' });
+        
+        expect(response.statusCode).toBe(404);
+        expect(response.body.error).toContain('not found');
+    });
+
+    test('TC-07: Fail - Missing departure_time', async () => {
+        const checkinRes = await createCheckin();
+        const id = checkinRes.body.id;
+        
+        const response = await request(app)
+            .put(`/api/attendance/checkout/${id}`)
+            .send({});
+        
+        expect(response.statusCode).toBe(400);
+        expect(response.body.error).toContain('departure_time is required');
+    });
+
+    test('TC-08: Fail - Prevent duplicate check-out', async () => {
+        // 1. Create check-in
+        const checkinRes = await createCheckin();
+        const id = checkinRes.body.id;
+        
+        // 2. First check-out
+        await request(app)
+            .put(`/api/attendance/checkout/${id}`)
+            .send({ departure_time: '17:00' });
+        
+        // 3. Second check-out attempt (should fail)
+        const response = await request(app)
+            .put(`/api/attendance/checkout/${id}`)
+            .send({ departure_time: '18:00' });
+        
+        expect(response.statusCode).toBe(400);
+        expect(response.body.error).toContain('Already checked out');
+    });
+});
