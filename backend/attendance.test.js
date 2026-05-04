@@ -603,49 +603,95 @@ describe('✅ EDIT ATTENDANCE (Dynamic Field Update) Tests', () => {
         expect(response.body.record.departure_time).toBe('17:00');
     });
 
-
-
-
-
-    
-
-    test('TC-06: Fail - Non-existent ID', async () => {
-        const response = await request(app)
-            .put('/api/attendance/checkout/99999')
-            .send({ departure_time: '17:00' });
-        
-        expect(response.statusCode).toBe(404);
-        expect(response.body.error).toContain('not found');
-    });
-
-    test('TC-07: Fail - Missing departure_time', async () => {
-        const checkinRes = await createCheckin();
+ test('TC-10: Update only department_time', async () => {
+        // 1. Create check-in first
+        const checkinRes = await createCheckin(); 
         const id = checkinRes.body.id;
         
+        
+        // 2.  Update department_time
         const response = await request(app)
-            .put(`/api/attendance/checkout/${id}`)
+            .put(`/api/attendance/${id}`)
+            .send({ departure_time: '16:30' });
+        
+        expect(response.statusCode).toBe(200);
+        expect(response.body.record.departure_time).toBe('16:30');
+
+        // arrival_time should remain 08:30
+        expect(response.body.record.arrival_time).toBe('08:30');
+    });
+
+
+test('TC-11: Update only date', async () => {
+      
+        const checkinRes = await createCheckin(); 
+        const id = checkinRes.body.id;
+        
+        
+       
+        const response = await request(app)
+            .put(`/api/attendance/${id}`)
+            .send({ date:'2026-05-05' });
+        
+        expect(response.statusCode).toBe(200);
+        expect(response.body.record.date).toBe('2026-05-05');
+    
+    });
+
+test('TC-12: Update all fields at once', async () => {
+      
+        const checkinRes = await createCheckin(); 
+        const id = checkinRes.body.id;
+        
+        
+       
+        const response = await request(app)
+            .put(`/api/attendance/${id}`)
+            .send({ arrival_time: '08:00',
+                departure_time: '16:00',
+                date: '2026-05-06'});
+        
+        expect(response.statusCode).toBe(200);
+        expect(response.body.record.arrival_time).toBe('08:00');
+        expect(response.body.record.departure_time).toBe('16:00');
+        expect(response.body.record.date).toBe('2026-05-06');
+    
+    });
+
+
+    test('TC-13: Fail - No fields to update', async () => {
+      
+        const checkinRes = await createCheckin(); 
+        const id = checkinRes.body.id;
+        
+        
+       
+        const response = await request(app)
+            .put(`/api/attendance/${id}`)
             .send({});
         
         expect(response.statusCode).toBe(400);
-        expect(response.body.error).toContain('departure_time is required');
+        expect(response.body.error).toContain('At least one field');
+    
     });
 
-    test('TC-08: Fail - Prevent duplicate check-out', async () => {
-        // 1. Create check-in
-        const checkinRes = await createCheckin();
+
+    test('TC-14: Fail - update non-exsitent ID', async () => {
+      
+        const checkinRes = await createCheckin(); 
         const id = checkinRes.body.id;
         
-        // 2. First check-out
-        await request(app)
-            .put(`/api/attendance/checkout/${id}`)
-            .send({ departure_time: '17:00' });
         
-        // 3. Second check-out attempt (should fail)
+       
         const response = await request(app)
-            .put(`/api/attendance/checkout/${id}`)
-            .send({ departure_time: '18:00' });
+            .put(`/api/attendance/999999`)
+            .send({arrival_time:'08:00'});
         
-        expect(response.statusCode).toBe(400);
-        expect(response.body.error).toContain('Already checked out');
+        expect(response.statusCode).toBe(404);
+        expect(response.body.error).toContain('not found');
+    
     });
+
+
+   
 });
