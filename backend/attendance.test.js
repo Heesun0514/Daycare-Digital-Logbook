@@ -431,7 +431,7 @@ afterAll((done)=>{
 
 describe('✅ CHECK-IN (CREATE) Tests',()=>{
     test('T-01: Success - Valid check-in with all data',async()=>{
-        const reponse = await request(app)
+        const response = await request(app)
         .post('/api/attendance/checkin')
         .send({
             child_name:"Tommy",
@@ -439,9 +439,9 @@ describe('✅ CHECK-IN (CREATE) Tests',()=>{
             date:'2026-05-04'
         });
 
-        expect(response.statusCode).tobe(201);
+        expect(response.statusCode).toBe(201);
         expect(response.body).toHaveProperty('id');
-        expect(response.body.child_name).tobe('Tommy');
+        expect(response.body.child_name).toBe('Tommy');
         expect(response.body.message).toContain('✅ Check-in successful')
     
     
