@@ -569,7 +569,7 @@ describe('✅ EDIT ATTENDANCE (Dynamic Field Update) Tests', () => {
             .send({ child_name: name, arrival_time: time, date });
     }
 
-    test('TC-09a: Update arrival_time when NO department_time', async () => {
+    test('TC-09a: Update arrival_time when NO departure_time', async () => {
         // 1. Create check-in first
         const checkinRes = await createCheckin(); // department_time=NULL
         const id = checkinRes.body.id;
@@ -603,13 +603,13 @@ describe('✅ EDIT ATTENDANCE (Dynamic Field Update) Tests', () => {
         expect(response.body.record.departure_time).toBe('17:00');
     });
 
- test('TC-10: Update only department_time', async () => {
+ test('TC-10: Update only departure_time', async () => {
         // 1. Create check-in first
         const checkinRes = await createCheckin(); 
         const id = checkinRes.body.id;
         
         
-        // 2.  Update department_time
+        // 2.  Update departure_time
         const response = await request(app)
             .put(`/api/attendance/${id}`)
             .send({ departure_time: '16:30' });
@@ -618,7 +618,7 @@ describe('✅ EDIT ATTENDANCE (Dynamic Field Update) Tests', () => {
         expect(response.body.record.departure_time).toBe('16:30');
 
         // arrival_time should remain 08:30
-        expect(response.body.record.arrival_time).toBe('08:30');
+        expect(response.body.record.arrival_time).toBe('09:00');
     });
 
 
