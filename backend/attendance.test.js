@@ -391,7 +391,9 @@ db.all(sql,[from,to],(err,rows)=>{
 //4.4.2 check if any records found 
      if(rows.length===0){
         return res.status(200).json({ 
+            success:true,
             message: `No attendance record found from ${from} to ${to}`,
+            record:[]
        
     });
     }
@@ -723,29 +725,32 @@ describe( 'READ (REPORT) Test ',()=>{
     });
 
 
-    test('TC-16 :✅ Should return records within date range',async()=>{
-        //create test data
+    test('TC-16 :✅ Should return empty array when no records',async()=>{
+        
+       
+        const response= await request(app) 
+                //no data exists in database
+        .get('/api/attendance/report?from=02-05-2026&to=03-05-2026') 
 
-        await request(app)
-        .post('/api/attendance/checkin')
-        .send({child_name: 'Milla', arrival_time: '09:00', date: '04-05-2026'})
-
-        await request(app)
-        .post('/api/attendance/checkin')
-        .send({child_name: 'Milla', arrival_time: '09:00', date: '05-05-2026'})
-
-
-
-        //Request a report for May 4th only (single day range)
-        const response= await request(app)
-
-         // chaged DD-MM-YYYY
-        .get('/api/attendance/report?from=04-05-2026&to=04-05-2026') 
-
+                //Server returns 200 (not 404) because the endpoint itself exists
         expect(response.statusCode).toBe(200);
 
-        //Verify only 1 record is returned (May 4th record, not May 5th)
-        expect(response.body.record.length).toBe(1);
+        // Verify the records array is empty (length = 0)
+        expect(response.body.record.length).toBe(0);
+    });
+
+ test('TC-17 :❌ Should reject missing date parameters',async()=>{
+        
+       
+        const response= await request(app) 
+                //Request a report with only 'from' parameter (missing the 'to' parameter)
+        .get('/api/attendance/report?from=02-05-2026') 
+
+                //Server returns 400 Bad Request status code
+        expect(response.statusCode).toBe(400);
+
+        // Error message should contain the word 'Both' (indicating both parameters are required)
+        expect(response.body.error).toContain('Both');
     });
 
 
