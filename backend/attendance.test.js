@@ -702,11 +702,11 @@ describe( 'READ (REPORT) Test ',()=>{
 
         await request(app)
         .post('/api/attendance/checkin')
-        .send({child_name: 'Milla', arrival_time: '09:00', date: '2026-05-04'})
+        .send({child_name: 'Milla', arrival_time: '09:00', date: '04-05-2026'})
 
         await request(app)
         .post('/api/attendance/checkin')
-        .send({child_name: 'Milla', arrival_time: '09:00', date: '2026-05-05'})
+        .send({child_name: 'Milla', arrival_time: '09:00', date: '05-05-2026'})
 
 
 
@@ -716,14 +716,47 @@ describe( 'READ (REPORT) Test ',()=>{
          // chaged DD-MM-YYYY
         .get('/api/attendance/report?from=04-05-2026&to=04-05-2026') 
 
+        expect(response.statusCode).toBe(200);
+
+        //Verify only 1 record is returned (May 4th record, not May 5th)
+        expect(response.body.record.length).toBe(1);
+    });
+
+
+    test('TC-16 :✅ Should return records within date range',async()=>{
+        //create test data
+
+        await request(app)
+        .post('/api/attendance/checkin')
+        .send({child_name: 'Milla', arrival_time: '09:00', date: '04-05-2026'})
+
+        await request(app)
+        .post('/api/attendance/checkin')
+        .send({child_name: 'Milla', arrival_time: '09:00', date: '05-05-2026'})
+
+
+
+        //Request a report for May 4th only (single day range)
+        const response= await request(app)
+
+         // chaged DD-MM-YYYY
+        .get('/api/attendance/report?from=04-05-2026&to=04-05-2026') 
 
         expect(response.statusCode).toBe(200);
 
         //Verify only 1 record is returned (May 4th record, not May 5th)
         expect(response.body.record.length).toBe(1);
+    });
 
 
-    })
-})
+
+
+
+
+
+
+});
    
+
+
 });
