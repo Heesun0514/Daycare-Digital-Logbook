@@ -328,12 +328,10 @@
 
 ## 4. Testing
 
- ============================================================================
- TESTING STRATEGY & TOOL SELECTION
- ============================================================================
-  
+### 4.1 TESTING STRATEGY & TOOL SELECTION
+
  WHY JEST INSTEAD OF CURL COMMANDS?
- ---------------------------------
+
  
  Issue with curl commands in comments:
    1. ❌ Hard to read - long command strings with escape characters
@@ -356,21 +354,21 @@
   - "Integration test where front and backend interact" → Supertest can test full API flow
   - curl commands would only be "manual testing", not "unit testing"
   
-  ============================================================================
-  INSTALLATION (already done):
-  ============================================================================
+
+  ### 4.2 INSTALLATION (already done):
+
   npm install --save-dev jest supertest
   
-  ============================================================================
-  RUN TESTS:
-  ============================================================================
+
+  ### 4.3  RUN TESTS:
+  
   npm test                 # Run all tests once
   npm run test:watch      # Auto-run on file changes
   npm test -- --coverage  # Show coverage report
   
-  ============================================================================
-  TEST STRUCTURE:
-  ============================================================================
+
+  ### 4.4 TEST STRUCTURE:
+
   backend/
   ├── tests/
   │   └── attendance.test.js    # All CRUD operation tests
