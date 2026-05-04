@@ -712,13 +712,15 @@ describe( 'READ (REPORT) Test ',()=>{
 
         //Request a report for May 4th only (single day range)
         const response= await request(app)
-        .get('/api/attendance/report?from=2026-05-04&to=2026-05-04') 
+
+         // chaged DD-MM-YYYY
+        .get('/api/attendance/report?from=04-05-2026&to=04-05-2026') 
 
 
         expect(response.statusCode).toBe(200);
 
         //Verify only 1 record is returned (May 4th record, not May 5th)
-        expect(response.body.records.length(1)).toBe(1);
+        expect(response.body.record.length).toBe(1);
 
 
     })
