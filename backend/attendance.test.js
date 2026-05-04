@@ -692,6 +692,36 @@ test('TC-12: Update all fields at once', async () => {
     
     });
 
+// ------------------------------------------------------------
+// 4. READ (REPORT) Tests
+// ------------------------------------------------------------
 
+describe( 'READ (REPORT) Test ',()=>{
+    test('TC-15 :✅ Should return records within date range',async()=>{
+        //create test data
+
+        await request(app)
+        .post('/api/attendance/checkin')
+        .send({child_name: 'Milla', arrival_time: '09:00', date: '2026-05-04'})
+
+        await request(app)
+        .post('/api/attendance/checkin')
+        .send({child_name: 'Milla', arrival_time: '09:00', date: '2026-05-05'})
+
+
+
+        //Request a report for May 4th only (single day range)
+        const response= await request(app)
+        .get('/api/attendance/report?from=2026-05-04&to=2026-05-04') 
+
+
+        expect(response.statusCode).toBe(200);
+
+        //Verify only 1 record is returned (May 4th record, not May 5th)
+        expect(response.body.records.length(1)).toBe(1);
+
+
+    })
+})
    
 });
