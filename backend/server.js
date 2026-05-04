@@ -405,7 +405,7 @@ db.all(sql,[from,to],(err,rows)=>{
  
 //4.4.2 check if any records found 
      if(rows.length===0){
-        return res.status(200).json({
+        return res.status(200).json({ 
             message: `No attendance record found from ${from} to ${to}`,
        
     });
@@ -421,6 +421,14 @@ db.all(sql,[from,to],(err,rows)=>{
 });
 });
     
+
+
+
+
+
+
+
+
 
 // Start the server
 app.listen(port,()=>{
