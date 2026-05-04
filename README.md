@@ -357,23 +357,23 @@
 
   ### 4.2 INSTALLATION (already done):
 
-  npm install --save-dev jest supertest
+  * npm install --save-dev jest supertest
   
 
   ### 4.3  RUN TESTS:
   
-  npm test                 # Run all tests once
-  npm run test:watch      # Auto-run on file changes
-  npm test -- --coverage  # Show coverage report
+  * npm test                 # Run all tests once
+  * npm run test:watch      # Auto-run on file changes
+  * npm test -- --coverage  # Show coverage report
   
 
   ### 4.4 TEST STRUCTURE:
 
-  backend/
-  ├── tests/
-  │   └── attendance.test.js    # All CRUD operation tests
-  ├── server.js                  # API endpoints
-  └── package.json               # "test": "jest" script added
+  * backend/
+  * ├── tests/
+  * │   └── attendance.test.js    # All CRUD operation tests
+  * ├── server.js                  # API endpoints
+  * └── package.json               # "test": "jest" script added
  
   
 
