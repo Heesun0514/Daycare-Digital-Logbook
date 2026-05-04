@@ -442,14 +442,44 @@ describe('✅ CHECK-IN (CREATE) Tests',()=>{
         expect(response.statusCode).toBe(201);
         expect(response.body).toHaveProperty('id');
         expect(response.body.child_name).toBe('Tommy');
-        expect(response.body.message).toContain('✅ Check-in successful')
-    
-    
-    })
+        expect(response.body.message).toContain('✅ Check-in successful');
+
+    });
+
+    test('T-02: Fail - Missing child_name',async()=>{
+        const response = await request(app)
+        .post('/api/attendance/checkin')
+        .send({
+            arrival_time:'09:00',
+            date:'2026-05-04'
+        });
+        expect(response.statusCode).toBe(400);
+        expect(response.body.error).toContain('required');
 
 })
 
+  test('T-03: Fail - Missing arrival_time',async()=>{
+        const response = await request(app)
+        .post('/api/attendance/checkin')
+        .send({
+            child_name:"Tommy",
+            date:'2026-05-04'
+        });
+        expect(response.statusCode).toBe(400);
+        expect(response.body.error).toContain('required');
 
+})
 
+  test('T-04: Fail - Missing date',async()=>{
+        const response = await request(app)
+        .post('/api/attendance/checkin')
+        .send({
+            arrival_time:'09:00',
+            child_name:"Tommy",
 
-;
+        });
+        expect(response.statusCode).toBe(400);
+        expect(response.body.error).toContain('required');
+
+});
+});
