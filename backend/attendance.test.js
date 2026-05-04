@@ -10,23 +10,6 @@ app.use(express.json())
 
 
 
-// clean datatbase before each test 
-beforeEach((done) => {
-    db.run('DELETE FROM attendance', () => {
-        done();
-    });
-});
-
-
-// close database after all tests 
-
-afterAll((done)=>{
-    db.close(()=>{
-        done();
-    });
-});
-
-
 // 1.create (post) Adds new data : check-in
 app.post('/api/attendance/checkin',(req,res)=>
 {
@@ -68,9 +51,6 @@ app.post('/api/attendance/checkin',(req,res)=>
 });
 
 });
-
-
-
 
 
 
@@ -427,16 +407,49 @@ db.all(sql,[from,to],(err,rows)=>{
 });
     
 
+// ========== TESTS START HERE ==========
 
-
-
-
-
-
-
-
-// Start the server
-app.listen(port,()=>{
-    console.log("Server is running"); // Show in terminal
-    console.log(` Express server runing at http://localhost:${port}`); // Show address 
+// clean datatbase before each test 
+beforeEach((done) => {
+    db.run('DELETE FROM attendance', () => {
+        done();
+    });
 });
+
+
+// close database after all tests 
+
+afterAll((done)=>{
+    db.close(()=>{
+        done();
+    });
+});
+
+// ------------------------------------------------------------
+// 1. CHECK-IN (CREATE) Tests
+// ------------------------------------------------------------
+
+describe('✅ CHECK-IN (CREATE) Tests',()=>{
+    test('T-01: Success - Valid check-in with all data',async()=>{
+        const reponse = await request(app)
+        .post('/api/attendance/checkin')
+        .send({
+            child_name:"Tommy",
+            arrival_time:'09:00',
+            date:'2026-05-04'
+        });
+
+        expect(response.statusCode).tobe(201);
+        expect(response.body).toHaveProperty('id');
+        expect(response.body.child_name).tobe('Tommy');
+        expect(response.body.message).toContain('✅ Check-in successful')
+    
+    
+    })
+
+})
+
+
+
+
+;
