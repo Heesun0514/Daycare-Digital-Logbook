@@ -347,20 +347,20 @@
 - "Unit tests" → Jest provides REAL unit tests
 - "Integration test" → Supertest tests full API flow
 
-  ### 4.2 INSTALLATION:
+### 4.2 INSTALLATION:
 
 ```bash
   npm install --save-dev jest supertest
  ```
 
-  ### 4.3  RUN TESTS:
+### 4.3  RUN TESTS:
 ```bash
    npm test                 # Run all tests once
    npm run test:watch      # Auto-run on file changes
    npm test -- --coverage  # Show coverage report
   ```
 
-  ### 4.4 TEST STRUCTURE:
+### 4.4 TEST STRUCTURE:
 
 
    backend/
