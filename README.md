@@ -365,9 +365,9 @@
 
    * backend/
    * ├── tests/
-   * │   └── attendance.test.js    # All CRUD operation tests
-   * ├── server.js                  # API endpoints
-   * └── package.json               # "test": "jest" script added
+   * │   └── attendance.test.js      # All CRUD operation tests
+   * ├── server.js                   # API endpoints
+   * └── package.json                # "test": "jest" script added
 
 
 ### 4.5 Unit Test Results
