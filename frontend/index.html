@@ -1,1 +1,23 @@
-<h2>Daycare-Digital-Logbook</h2>
+<div id="app">
+    <!-- Teacher View -->
+    <div id="teacher-section">
+        <h3>Today's Attendance</h3>
+        <div id="attendance-list"></div>
+    </div>
+    
+    <!-- Report Section -->
+    <div id="report-section">
+        <input type="date" id="from-date">
+        <input type="date" id="to-date">
+        <button onclick="generateReport()">Generate Report</button>
+        <button onclick="downloadReport()">Download</button>
+        <div id="report-results"></div>
+    </div>
+    
+    <!-- Parent View -->
+    <div id="parent-section">
+        <input type="email" id="parent-email" placeholder="Enter your email">
+        <button onclick="viewChildStatus()">View My Child</button>
+        <div id="child-status"></div>
+    </div>
+</div>
