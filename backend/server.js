@@ -12,14 +12,7 @@ const app = express();
 const port=3000;
 
 
-app.use(express.json());
-//When someone visits the main page, run this small function
-app.get('/', (req, res) => {
-
-    //"Send back the message: Hello World!"
-    res.send("Hello World!");
-});
-
+app.use(express.static(Path2D.join(__dirname,'frontend')));
 
 
 // 1.create (post) Adds new data : check-in
