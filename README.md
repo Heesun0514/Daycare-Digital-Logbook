@@ -333,48 +333,82 @@
  WHY JEST INSTEAD OF CURL COMMANDS?
 
  
- Issue with curl commands in comments:
-   1. ❌ Hard to read - long command strings with escape characters
-   2. ❌ No syntax highlighting - terminal output mixed with code
-   3. ❌ Manual verification - must visually compare expected vs actual
-   4. ❌ No automation - cannot run all tests with one command
-   5. ❌ No CI/CD - cannot integrate with GitHub Actions
-   6. ❌ No coverage report - cannot measure what code is tested
- 
- Jest + Supertest advantages:
-  1. ✅ Readable - clear test() blocks with descriptive names
-  2. ✅ Syntax highlighting - VS Code shows test runner UI
-  3. ✅ Automated - expect() assertions automatically verify results
-  4. ✅ One-command - "npm test" runs ALL tests instantly
-  5. ✅ CI/CD ready - can run on GitHub Actions automatically
-  6. ✅ Coverage reports - shows untested lines of code
+| curl commands (manual) | Jest + Supertest (automated) |
+|------------------------|------------------------------|
+| ❌ Hard to read with escape characters | ✅ Clear test() blocks with descriptions |
+| ❌ No syntax highlighting | ✅ VS Code test runner UI |
+| ❌ Manual visual comparison | ✅ Automated expect() assertions |
+| ❌ Cannot run all tests at once | ✅ One command: `npm test` |
+| ❌ No CI/CD integration | ✅ GitHub Actions ready |
+| ❌ No coverage reports | ✅ Shows untested lines |
+
   
-  For this assignment :
-  - "Testing should at a minimum include unit tests" → Jest provides REAL unit tests
-  - "Integration test where front and backend interact" → Supertest can test full API flow
-  - curl commands would only be "manual testing", not "unit testing"
-  
+**Assignment compliance:**
+- "Unit tests" → Jest provides REAL unit tests
+- "Integration test" → Supertest tests full API flow
 
   ### 4.2 INSTALLATION:
 
-  * npm install --save-dev jest supertest
-  
+```bash
+  npm install --save-dev jest supertest
+ ```
 
   ### 4.3  RUN TESTS:
-  
-  * npm test                 # Run all tests once
-  * npm run test:watch      # Auto-run on file changes
-  * npm test -- --coverage  # Show coverage report
-  
+```bash
+   npm test                 # Run all tests once
+   npm run test:watch      # Auto-run on file changes
+   npm test -- --coverage  # Show coverage report
+  ```
 
   ### 4.4 TEST STRUCTURE:
 
-  * backend/
-  * ├── tests/
-  * │   └── attendance.test.js    # All CRUD operation tests
-  * ├── server.js                  # API endpoints
-  * └── package.json               # "test": "jest" script added
- 
+
+   backend/
+   ├── tests/
+   │   └── attendance.test.js    # All CRUD operation tests
+   ├── server.js                  # API endpoints
+   └── package.json               # "test": "jest" script added
+
+
+### 4.5 Unit Test Results
+
+#### CREATE (Check-in) Tests
+
+| Test ID | Operation | Description | Expected | Actual | Result |
+|---------|-----------|-------------|----------|--------|--------|
+| TC-CI-01 | CREATE | Valid check-in with all data | 201 | 201 | ✅ PASS |
+| TC-CI-02 | CREATE | Missing child_name | 400 | 400 | ✅ PASS |
+| TC-CI-03 | CREATE | Missing arrival_time | 400 | 400 | ✅ PASS |
+| TC-CI-04 | CREATE | Missing date | 400 | 400 | ✅ PASS |
+
+#### UPDATE (Check-out) Tests
+
+| Test ID | Description | Expected | Actual | Result |
+|---------|-------------|----------|--------|--------|
+| TC-05 | Valid check-out with departure_time | 200 | 200 | ✅ PASS |
+| TC-06 | Non-existent ID | 404 | 404 | ✅ PASS |
+| TC-07 | Missing departure_time field | 400 | 400 | ✅ PASS |
+| TC-08 | Prevent duplicate check-out | 400 | 400 | ✅ PASS |
+
+#### UPDATE (Edit Attendance - Dynamic) Tests
+
+| Test ID | Description | Expected | Actual | Result |
+|---------|-------------|----------|--------|--------|
+| TC-09a | Update arrival_time only (departure_time NULL) | 200 | 200 | ✅ PASS |
+| TC-09b | Update arrival_time only (departure_time exists) | 200 | 200 | ✅ PASS |
+| TC-10 | Update departure_time only | 200 | 200 | ✅ PASS |
+| TC-11 | Update date only | 200 | 200 | ✅ PASS |
+| TC-12 | Update all fields at once | 200 | 200 | ✅ PASS |
+| TC-13 | Empty request body (no fields) | 400 | 400 | ✅ PASS |
+| TC-14 | Non-existent ID (99999) | 404 | 404 | ✅ PASS |
+
+#### READ (Report) Tests
+
+| Test ID | Description | Expected | Actual | Result |
+|---------|-------------|----------|--------|--------|
+| TC-15 | Return records within date range | 200 | 200 | ✅ PASS |
+| TC-16 | Return empty array when no records | 200 | 200 | ✅ PASS |
+| TC-17 | Reject missing date parameters | 400 | 400 | ✅ PASS |
   
 
 ## 5. Additional Features
