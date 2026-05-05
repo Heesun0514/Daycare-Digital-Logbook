@@ -15,7 +15,7 @@ const port=3000;
 
 // Middleware
 app.use(express.json());
-app.use(express.static(path.join(__dirname,'frontend')));
+app.use(express.static(path.join(__dirname,'../frontend')));
 
 
 // 1.create (post) Adds new data : check-in
