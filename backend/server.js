@@ -12,7 +12,9 @@ const app = express();
 const port=3000;
 
 
-app.use(express.static(Path2D.join(__dirname,'frontend')));
+// Middleware
+app.use(express.json());
+app.use(express.static(path.join(__dirname,'frontend')));
 
 
 // 1.create (post) Adds new data : check-in
