@@ -2,6 +2,7 @@
 
 // Get the express library that helps to make a web server
 const express =require("express");
+const path=require('path');
 const db=require('./database'); // connnected to database.js
 
 //Use express to create a server. Name it app.
