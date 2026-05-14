@@ -160,6 +160,21 @@ async function loadTodayAttendance(){
 
 
 
+/*
+
+testing 
+sqlite> SELECT * FROM attendance;
+122|heesun lee|09:00||2026-05-14
+123|Milla|10:00||2026-05-14
+124|Milla|09:00||2026-05-14
+125|janis|09:00||2026-05-14
+126|halaam|09:00|17:00|2026-05-14
+sqlite> 
+
+*/
+
+
+
 
 // ============== 4.Edit Attendance Time( UPDATE ) ====================
 
