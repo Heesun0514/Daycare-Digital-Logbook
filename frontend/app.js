@@ -97,15 +97,8 @@ async function loadTodayAttendance(){
       
     const today=new Date().toISOString().split('T')[0];
     
-
-    //2. convert to DD-MM-YYYY for backend
-      // Original	"2026-05-14"
-      // Split	["2026", "05", "14"]
-      // Assign	year="2026", month="05", day="14"
-      // Re-format	"14-05-2026"
-    
-    const[year,month,day]=today.split('-');
-    const todayFormatted=`${day}-${month}-${year}`
+    //2, today's format 
+    const todayFormatted = today;  
 
  
 
@@ -121,13 +114,6 @@ async function loadTodayAttendance(){
      const result =await response.json(); // converts the server's response back into a JS object 
      
 
-      // debugging 
-        console.log('Response status:', response.status);
-        console.log('Response body:', result);
-        console.log('Response keys:', Object.keys(result));
-
-
-         
      if (response.status===200){
         // sucess ! 
         // Extracts the attendance list from the result. 
@@ -171,6 +157,7 @@ async function loadTodayAttendance(){
 
 }
 }
+
 
 
 
@@ -231,6 +218,79 @@ async function editAttendanceTime(){
         }
      } catch(error){ // the internet failed or the server is turned off 
         document.getElementById('editResult').innerHTML=` ❌ Connection error: ${error.message}`;
+
+}
+}
+
+
+
+// ============== 5.Generate Report( READ ) ====================
+
+async function generateReport(){
+
+   //1. grab the values from the input boxes 
+    const from=document.getElementById('from-date').value
+    const to=document.getElementById('to-date').value
+    
+    //2 Input validation - check if both exsit 
+    if (!from || ! to) {
+        alert('Please select both from and to dates');
+        return;}
+ 
+
+    try { 
+        //3. send the "Package " (JSON) to the server 
+        
+        const response = await fetch (`http://localhost:3000/api/attendance/report?from=${from}&to=${to}`,{
+        
+            // no need method,headers, or body because this function is fetching(READING)data,not sending or updating
+    });
+
+     //4. open the response from the server
+     const result =await response.json(); // converts the server's response back into a JS object 
+     
+
+     if (response.status===200){
+        // sucess ! 
+        // Extracts the attendance list from the result. 
+        // If no records exist, it defaults to an empty array.
+
+        const records=result.record || [];
+
+         //5. show message if no records 
+        if (records.length===0){
+            document.getElementById('report-results').innerHTML='<p> 📭 No records found in this date range </p>'
+            return;
+        }
+
+        //6. Build HTML table 
+         //Initializes a string to hold HTML table code and adds the header row.
+       let html = '<table border="1" cellpadding="5" style="border-collapse: collapse;">';
+            html += '<tr style="background-color: #f2f2f2;">';
+            html += '<th>ID</th><th>Name</th><th>Arrival</th><th>Departure</th><th>Status</th>';
+            html += '</tr>';
+            
+
+         // 7. Add each child to table    
+        records.forEach(record=>{
+            
+            html += `<tr>
+            <td>${record.id}</td>
+            <td>${record.child_name}</td>
+            <td>${record.arrival_time}</td>
+            <td>${record.departure_time}</td>
+            <td>${record.date}</td>
+             
+            </tr>`;
+    
+        });
+
+        html +='</table>'
+        document.getElementById('').innerHTML=html;
+       
+    }
+     } catch(error){  
+        document.getElementById('report-results').innerHTML=` ❌ Error: ${error.message}`;
 
 }
 }
