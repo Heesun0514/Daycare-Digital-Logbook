@@ -323,6 +323,30 @@
 ### 3.1 API Endpoints
 ### 3.2 Tech Stack
 ### 3.3 Database
+### 3.4 Project Structure
+
+'''bash
+Daycare-Digital-Logbook/ # Root folder
+│
+├── .github/ # GitHub Actions folder
+│ └── workflows/
+│ └── ci-cd.yml # CI/CD configuration file ✅
+│
+├── backend/ # Backend folder
+│ ├── attendance.test.js # Jest test file ✅
+│ ├── database.js # SQLite connection file ✅
+│ ├── package-lock.json # Dependency lock file ✅
+│ ├── package.json # Project configuration file ✅
+│ └── server.js # Express server file ✅
+│
+├── frontend/ # Frontend folder
+│ ├── app.js # JavaScript file ✅
+│ └── index.html # HTML file ✅
+│
+├── .gitignore # Git exclude file ✅
+└── README.md # Project description file ✅
+
+'''
 
 ---
 
