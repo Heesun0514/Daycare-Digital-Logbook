@@ -94,6 +94,7 @@ async function loadTodayAttendance(){
       // Original String: 2026-05-14 T 12:57:53.123Z
       // After .split('T'): ["2026-05-14", "12:57:53.123Z"]
       // After [0]: "2026-05-14"
+      
     const today=new Date().toISOString().split('T')[0];
     
 
@@ -132,7 +133,7 @@ async function loadTodayAttendance(){
         // Extracts the attendance list from the result. 
         // If no records exist, it defaults to an empty array.
 
-        const record=result.record || [];
+        const records=result.record || [];
 
          //5. show message if no records 
         if (records.length===0){
@@ -189,7 +190,7 @@ async function editAttendanceTime(){
     if (!id){
         alert('Please enter Record ID');
     }
-    if (!child_name && ! arrival_time && !date){
+    if (! arrival_time && ! departure_time && !date){
         alert('Please enter at least one field to update (arrival,departure,or date')
         return;
     }
@@ -212,7 +213,7 @@ async function editAttendanceTime(){
         const response = await fetch (`http://localhost:3000/api/attendance/${id}`,{
         method:'PUT', // update the data
         headers:{'Content-type':'application/json'}, // JSOM format 
-        body:JSON.stringify({updateData}) //converts the javascript object into a JSON string
+        body:JSON.stringify(updateData) //converts the javascript object into a JSON string
     });
 
      //5. open the response from the server
