@@ -15,7 +15,7 @@ async function checkin(){
     //2. simple check : if any box is empty, stop and tell the user 
     if (!child_name || ! arrival_time || !date){
         alert('Please fill all fields')
-        return
+        return;
     }
 
     try { 
@@ -48,19 +48,19 @@ async function checkin(){
 async function checkout(){
 
      //1. grab the values from the input boxes 
-    const id =document.getElementById('id').value;
+    const id =document.getElementById('checkoutid').value;
     const department_time =document.getElementById('departureTime').value;
     
 
     //2. simple check : if any box is empty, stop and tell the user 
-    if (!department_time){
-        alert('Please fill departure time')
-        return
+    if (!id || !department_time){
+        alert('Please enter Record ID and Departure Time')
+        return;
     }
 
     try { 
         //3. send teh "Package " (JSON) to the server 
-        const response = await fetch ('http://localhost:3000/api/attendance/checkout',{
+        const response = await fetch (`http://localhost:3000/api/attendance/checkout/${id}`,{
         method:'PUT', // update the data
         headers:{'Content-type':'application/json'}, // JSOM format 
         body:JSON.stringify({department_time}) //converts the javascript object into a JSON string
@@ -71,7 +71,7 @@ async function checkout(){
      
      if (response.status===201){
         // sucess ! show a green checkmark and the name 
-        document.getElementById('checkoutResult').innerHTML=`✅ Check-out sucessful! record:${result.record}`
+        document.getElementById('checkoutResult').innerHTML=`✅ Check-out sucessful! record ID:${id} at ${department_time}`;
         loadTodayAttendance(); // Update the list 
 
         } else { // the server said no (e.g.,missing data )
