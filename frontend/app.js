@@ -317,74 +317,48 @@ async function generateReport(){
 
 // ============== 6.Download Report( CSV ) ====================
 
-async function generateReport(){
+async function downloadReport(){
 
-   //1. grab the values from the input boxes 
-    const from=document.getElementById('from-date').value
-    const to=document.getElementById('to-date').value
-    
-    //2 Input validation - check if both exsit 
-    if (!from || ! to) {
-        alert('Please select both from and to dates');
-        return;}
- 
+   //1. check if report data exist 
+    if(!window.reportData || window.reportData,length===0){
+        alert('Please generate a report first');
+        return;
+    }
 
-    try { 
-        //3. send the "Package " (JSON) to the server 
-        
-        const response = await fetch (`http://localhost:3000/api/attendance/report?from=${from}&to=${to}`,{
-        
-            // no need method,headers, or body because this function is fetching(READING)data,not sending or updating
+    //2. create CSV content 
+
+    let csv='ID,Child Name,Arriavle Time,Depature Time,Data\n';
+
+    window.reportData.forEach(record=>{
+        csv +=`${record.id},${record.child_name},${record.arrival_time},${record.departure_time ||''}, ${record.date}\n`;
     });
 
-     //4. open the response from the server
-     const result =await response.json(); // converts the server's response back into a JS object 
-     
+    //3. download CSV file 
+        // Creates a Blob (Binary Large Object),
+        //  which is a file-like object containing the raw CSV text data.
+        // utf-8 is the universal standard for encoding characters.
+    const blob = new Blob([csv],{type:'text/csv;charset=utf-8'}); 
 
-     if (response.status===200){
-        // sucess ! 
-        // Extracts the attendance list from the result. 
-        // If no records exist, it defaults to an empty array.
 
-        const records=result.record || [];
+    // Generates a temporary URL that points to the created Blob object in the browser memory.
+    const url=URL.createObjectURL(blob);
 
-         //5. show message if no records 
-        if (records.length===0){
-            document.getElementById('report-results').innerHTML='<p> 📭 No records found in this date range </p>'
-            return;
-        }
+    // Creates a hidden <a> (anchor) element in memory to simulate a click for downloading.
+    const link=document.createElement('a');
 
-        //6. Build HTML table 
-         //Initializes a string to hold HTML table code and adds the header row.
-       let html = '<table border="1" cellpadding="5" style="border-collapse: collapse;">';
-            html += '<tr style="background-color: #f2f2f2;">';
-            html += '<th>ID</th><th>Name</th><th>Arrival</th><th>Departure</th><th>Status</th>';
-            html += '</tr>';
-            
+    // Sets the href of the link to the temporary URL created earlier.
+    link.href=url;
 
-         // 7. Add each child to table    
-        records.forEach(record=>{
-            
-            html += `<tr>
-            <td>${record.id}</td>
-            <td>${record.child_name}</td>
-            <td>${record.arrival_time}</td>
-            <td>${record.departure_time || '-'}</td>
-            <td>${record.date}</td>
-             
-            </tr>`;
-    
-        });
+    // Sets the download attribute, which tells the browser to download the file instead of opening it, 
+    // naming it with the current date.
+    link.setAttribute('download',`attendance_report_${new Date().toISOString().split('T')[0]}.csv`);
+   
+   // Temporarily adds the link to the document, triggers a click to start the download, 
+   // and then removes the link immediately.
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 
-        html +='</table>'
-        document.getElementById('report-results').innerHTML=html;
-        window.reportData=records;
-    } else {
-        document.getElementById('report-results').innerHTML=`<p>❌ ${result.error}</p>`;
-    }
-       
-     } catch(error){  
-        document.getElementById('report-results').innerHTML=` ❌ Error: ${error.message}`;
-
-}
+    // Releases the temporary URL from memory to optimize performance and prevent memory leaks.
+    URL.revokeObjectURL(url);
 }
