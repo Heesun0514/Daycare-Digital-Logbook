@@ -272,6 +272,10 @@ async function generateReport(){
 
         const records=result.record || [];
 
+        // Adding window.reportData
+
+        window.reportData=records;
+
          //5. show message if no records 
         if (records.length===0){
             document.getElementById('report-results').innerHTML='<p> 📭 No records found in this date range </p>'
