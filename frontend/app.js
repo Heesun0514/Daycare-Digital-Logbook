@@ -49,11 +49,11 @@ async function checkout(){
 
      //1. grab the values from the input boxes 
     const id =document.getElementById('checkoutId').value; // ✅ fixed: 'checkoutId'
-    const department_time =document.getElementById('departureTime').value;
+    const departure_time =document.getElementById('departureTime').value;
     
 
     //2. simple check : if any box is empty, stop and tell the user 
-    if (!id || !department_time){
+    if (!id || !departure_time){
         alert('Please enter Record ID and Departure Time')
         return;
     }
@@ -64,7 +64,7 @@ async function checkout(){
         const response = await fetch (`http://localhost:3000/api/attendance/checkout/${id}`,{
         method:'PUT', // update the data
         headers:{'Content-type':'application/json'}, // JSOM format 
-        body:JSON.stringify({department_time}) //converts the javascript object into a JSON string
+        body:JSON.stringify({departure_time}) //converts the javascript object into a JSON string
     });
 
      //4. open the response from the server
@@ -74,7 +74,7 @@ async function checkout(){
          // ✅ fixed: success status is 200, not 201
      if (response.status===200){
         // sucess ! show a green checkmark and the name 
-        document.getElementById('checkoutResult').innerHTML=`✅ Check-out sucessful! record ID:${id} at ${department_time}`;
+        document.getElementById('checkoutResult').innerHTML=`✅ Check-out sucessful! record ID:${id} at ${departure_time}`;
         loadTodayAttendance(); // Update the list 
 
         } else { // the server said no (e.g.,missing data )
@@ -174,7 +174,7 @@ async function editAttendanceTime(){
      //1. grab the values from the input boxes 
     const id =document.getElementById('editId').value; 
     const arrival_time =document.getElementById('editArrival').value;
-    const department_time=document.getElementById('editDeparture').value;
+    const departure_time=document.getElementById('editDeparture').value;
     const date=document.getElementById('editDate').value;
     
 
@@ -191,7 +191,7 @@ async function editAttendanceTime(){
     // 3. Build dynamic update object( only include fields that are provided )
     const updateData={}; // create empty object {key:value}
     if (arrival_time)updateData.arrival_time=arrival_time;
-    if(department_time)updateData.department_time=department_time;
+    if(departure_time)updateData.departure_time=departure_time;
     if(date)updateData.date=date;
 
 
