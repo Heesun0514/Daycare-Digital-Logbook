@@ -126,7 +126,7 @@ async function loadTodayAttendance(){
         // Extracts the attendance list from the result. 
         // If no records exist, it defaults to an empty array.
 
-        const records=result.records || [];
+        const record=result.record || [];
 
          //5. show message if no records 
         if (records.length===0){
@@ -144,12 +144,12 @@ async function loadTodayAttendance(){
 
          // 7. Add each child to table    
         records.forEach(record=>{
-            const status =record.department_time ? '✅ Departed' : '🟢 Present';
+            const status =record.departure_time ? '✅ Departed' : '🟢 Present';
             html += `<tr>
             <td>${record.id}</td>
             <td>${record.child_name}</td>
             <td>${record.arrival_time}</td>
-            <td>${record.department_time}</td>
+            <td>${record.departure_time}</td>
               <td>${status}</td>
             </tr>`;
     
