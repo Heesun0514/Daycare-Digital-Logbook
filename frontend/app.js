@@ -19,7 +19,7 @@ async function checkin(){
     }
 
     try { 
-        //3. send teh "Package " (JSON) to the server 
+        //3. send the "Package " (JSON) to the server 
         const response = await fetch ('http://localhost:3000/api/attendance/checkin',{
         method:'POST', // create new data
         headers:{'Content-type':'application/json'}, // JSOM format 
@@ -59,7 +59,7 @@ async function checkout(){
     }
 
     try { 
-        //3. send teh "Package " (JSON) to the server 
+        //3. send the "Package " (JSON) to the server 
           // ✅ fixed: URL includes ID parameter
         const response = await fetch (`http://localhost:3000/api/attendance/checkout/${id}`,{
         method:'PUT', // update the data
@@ -86,47 +86,108 @@ async function checkout(){
 }
 }
 
-// ============== 3.Edit Attendance Time( UPDATE ) ====================
+// ============== 3.Today's Attendance ( READ ) ====================
 
-async function editAttendanceTime(){
+async function loadTodayAttendance(){
 
      //1. grab the values from the input boxes 
-    const id =document.getElementById('checkinId').value; 
-    const arrival_time =document.getElementById('arrivaleTime').value;
-    const department_time=document.getElementById('departureTime').value;
-    const date=document.getElementById('checkinDate').value;
+    const id =document.getElementById('checkoutId').value; // ✅ fixed: 'checkoutId'
+    const department_time =document.getElementById('departureTime').value;
     
 
     //2. simple check : if any box is empty, stop and tell the user 
-    if (!child_name && ! arrival_time && !date){
-        alert('Please enter at least one field')
+    if (!id || !department_time){
+        alert('Please enter Record ID and Departure Time')
         return;
     }
 
     try { 
-        //3. send teh "Package " (JSON) to the server 
-          
-        const response = await fetch (`http://localhost:3000/api/attendance/checkin/${id}`,{
+        //3. send the "Package " (JSON) to the server 
+          // ✅ fixed: URL includes ID parameter
+        const response = await fetch (`http://localhost:3000/api/attendance/checkout/${id}`,{
         method:'PUT', // update the data
         headers:{'Content-type':'application/json'}, // JSOM format 
-        body:JSON.stringify({child_name,arrival_time,department_time,date}) //converts the javascript object into a JSON string
+        body:JSON.stringify({department_time}) //converts the javascript object into a JSON string
     });
 
      //4. open the response from the server
      const result =await response.json(); // converts the server's response back into a JS object 
      
 
-        
+         // ✅ fixed: success status is 200, not 201
      if (response.status===200){
         // sucess ! show a green checkmark and the name 
-        document.getElementById('editAttendanceTimeResult').innerHTML=`✅ Attendance record updated sucessfully! record ID:${id} at ${arrival_time},${department_time},${date}`;
+        document.getElementById('checkoutResult').innerHTML=`✅ Check-out sucessful! record ID:${id} at ${department_time}`;
         loadTodayAttendance(); // Update the list 
 
         } else { // the server said no (e.g.,missing data )
-            document.getElementById('editAttendanceTimeResult').innerHTML=`❌ Error:${result.error} `;
+            document.getElementById('checkoutResult').innerHTML=`❌ Error:${result.error} `;
         }
      } catch(error){ // the internet failed or the server is turned off 
-        document.getElementById('editAttendanceTimeResult').innerHTML=` ❌ Connection error: ${error.message}`;
+        document.getElementById('checkoutResult').innerHTML=` ❌ Connection error: ${error.message}`;
+
+}
+}
+
+
+
+// ============== 4.Edit Attendance Time( UPDATE ) ====================
+
+async function editAttendanceTime(){
+
+     //1. grab the values from the input boxes 
+    const id =document.getElementById('editId').value; 
+    const arrival_time =document.getElementById('editArrival').value;
+    const department_time=document.getElementById('editDeparture').value;
+    const date=document.getElementById('editDate').value;
+    
+
+    //2. simple check : at least one field to update 
+
+    if (!id){
+        alert('Please enter Record ID');
+    }
+    if (!child_name && ! arrival_time && !date){
+        alert('Please enter at least one field to update (arrival,departure,or date')
+        return;
+    }
+
+    // 3. Build dynamic update object( only include fields that are provided )
+    const updateData={}; // create empty object {key:value}
+    if (arrival_time)updateData.arrival_time=arrival_time;
+    if(department_time)updateData.department_time=department_time;
+    if(date)updateData.date=date;
+
+
+    if(Object.keys(updateData).length===0){ // key:value ['arrival_time', 'date']
+        alert('Please enter at least one field to update');
+        return;
+    }
+
+    try { 
+        //4. send the "Package " (JSON) to the server 
+          
+        const response = await fetch (`http://localhost:3000/api/attendance/${id}`,{
+        method:'PUT', // update the data
+        headers:{'Content-type':'application/json'}, // JSOM format 
+        body:JSON.stringify({updateData}) //converts the javascript object into a JSON string
+    });
+
+     //5. open the response from the server
+     const result =await response.json(); // converts the server's response back into a JS object 
+     
+
+        
+     if (response.status===200){
+        // sucess ! show a green checkmark and the name 
+        document.getElementById('editResult').innerHTML=`✅ Updated sucessful! record ID:${id}`;
+        loadTodayAttendance(); // Update the list 
+
+        } else { // the server said no (e.g.,missing data )
+            document.getElementById('editResult').innerHTML=`❌ Error:${result.error} `;
+        }
+     } catch(error){ // the internet failed or the server is turned off 
+        document.getElementById('editResult').innerHTML=` ❌ Connection error: ${error.message}`;
 
 }
 }
