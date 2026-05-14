@@ -120,6 +120,12 @@ async function loadTodayAttendance(){
      const result =await response.json(); // converts the server's response back into a JS object 
      
 
+      // debugging 
+        console.log('Response status:', response.status);
+        console.log('Response body:', result);
+        console.log('Response keys:', Object.keys(result));
+
+
          
      if (response.status===200){
         // sucess ! 
