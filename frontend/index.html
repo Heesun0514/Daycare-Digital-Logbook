@@ -47,30 +47,30 @@
             <input type="time" id="editArrival" placeholder="New Arrival Time">
             <input type="time" id="editDeparture" placeholder="New Departure Time">
             <input type="date" id="editDate">
-            <button onclick="editAttendance()">💾 Save Changes</button>
+            <button onclick="editAttendanceTime()">💾 Save Changes</button>
         </div>
         <div id="editResult" style="margin-top:10px"></div>
     </div>
 </div>
 
-    
-    <!-- Report Section -->
-    <div id="report-section">
-        <h2>📊 Director: Attendance Reports</h2>
-         <div style="border:1px solid #2196F3; padding:15px; margin:10px 0; border-radius:5px">
-         
-         <h3>📅 Generate Attendance Report (READ)</h3>
+
+  <!-- 5.Report Section -->
+    <div style="border:1px solid #b04e27; padding:15px; margin:10px 0; border-radius:5px">
+        <h3>✏️ 5. Director: Attendance Reports</h3>
+        <div>
+           <h3>📅 Generate Attendance Report (READ)</h3>
         <input type="date" id="from-date">
         <input type="date" id="to-date">
         <button onclick="generateReport()">Generate Report</button>
         <button onclick="downloadReport()">Download</button>
         </div>
-        <div id="report-results" style="margin-top:15px"></div>
+        <div id="report-results"></div>
     </div>
+</div>
+
     
     <!-- Parent View -->
     <div id="parent-section">
-        <h2>👪 Parent Portal</h2>
         <input type="email" id="parent-email" placeholder="Enter your email">
         <button onclick="viewChildStatus()">View My Child</button>
         <div id="child-status"></div>
