@@ -10,6 +10,14 @@ async function checkin(){
     const arrival_time=document.getElementById('arrivalTime').value;
     const date=document.getElementById('checkinDate').value;
 
+    // validation 
+    if (!child_name || ! arrival_time || !date){
+        alert('Please fill all fields')
+        return
+    }
+
     
+
+
 
 }
