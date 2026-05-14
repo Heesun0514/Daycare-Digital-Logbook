@@ -20,9 +20,9 @@ async function checkin(){
 
     try { 
         //3. send teh "Package " (JSON) to the server 
-        const response = await fetch ('http"//localhost:3000/api/attendance/checkin',{
+        const response = await fetch ('http://localhost:3000/api/attendance/checkin',{
         method:'POST', // create new data
-        headers:{'Conten-type':'application/json'}, // JSOM format 
+        headers:{'Content-type':'application/json'}, // JSOM format 
         body:JSON.stringify({child_name,arrival_time,date}) //converts the javascript object into a JSON string
     });
 
