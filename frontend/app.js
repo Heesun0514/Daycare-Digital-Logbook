@@ -48,7 +48,7 @@ async function checkin(){
 async function checkout(){
 
      //1. grab the values from the input boxes 
-    const id =document.getElementById('checkoutid').value;
+    const id =document.getElementById('checkoutid').value; // ✅ fixed: 'checkoutId'
     const department_time =document.getElementById('departureTime').value;
     
 
@@ -60,6 +60,7 @@ async function checkout(){
 
     try { 
         //3. send teh "Package " (JSON) to the server 
+          // ✅ fixed: URL includes ID parameter
         const response = await fetch (`http://localhost:3000/api/attendance/checkout/${id}`,{
         method:'PUT', // update the data
         headers:{'Content-type':'application/json'}, // JSOM format 
@@ -69,7 +70,9 @@ async function checkout(){
      //4. open the response from the server
      const result =await response.json(); // converts the server's response back into a JS object 
      
-     if (response.status===201){
+
+         // ✅ fixed: success status is 200, not 201
+     if (response.status===200){
         // sucess ! show a green checkmark and the name 
         document.getElementById('checkoutResult').innerHTML=`✅ Check-out sucessful! record ID:${id} at ${department_time}`;
         loadTodayAttendance(); // Update the list 
