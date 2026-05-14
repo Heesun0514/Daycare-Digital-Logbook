@@ -325,7 +325,7 @@
 ### 3.3 Database
 ### 3.4 Project Structure
 
-'''bash
+```
 Daycare-Digital-Logbook/ # Root folder
 │
 ├── .github/ # GitHub Actions folder
@@ -346,7 +346,7 @@ Daycare-Digital-Logbook/ # Root folder
 ├── .gitignore # Git exclude file ✅
 └── README.md # Project description file ✅
 
-'''
+```
 
 ---
 
