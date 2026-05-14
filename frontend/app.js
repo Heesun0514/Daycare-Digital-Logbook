@@ -301,9 +301,12 @@ async function generateReport(){
         });
 
         html +='</table>'
-        document.getElementById('').innerHTML=html;
-       
+        document.getElementById('report-results').innerHTML=html;
+        window.reportData=records;
+    } else {
+        document.getElementById('report-results').innerHTML=`<p>❌ ${result.error}</p>`;
     }
+       
      } catch(error){  
         document.getElementById('report-results').innerHTML=` ❌ Error: ${error.message}`;
 
