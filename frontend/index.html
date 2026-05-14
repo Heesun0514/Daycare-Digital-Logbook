@@ -56,15 +56,21 @@
     
     <!-- Report Section -->
     <div id="report-section">
+        <h2>📊 Director: Attendance Reports</h2>
+         <div style="border:1px solid #2196F3; padding:15px; margin:10px 0; border-radius:5px">
+         
+         <h3>📅 Generate Attendance Report (READ)</h3>
         <input type="date" id="from-date">
         <input type="date" id="to-date">
         <button onclick="generateReport()">Generate Report</button>
         <button onclick="downloadReport()">Download</button>
-        <div id="report-results"></div>
+        </div>
+        <div id="report-results" style="margin-top:15px"></div>
     </div>
     
     <!-- Parent View -->
     <div id="parent-section">
+        <h2>👪 Parent Portal</h2>
         <input type="email" id="parent-email" placeholder="Enter your email">
         <button onclick="viewChildStatus()">View My Child</button>
         <div id="child-status"></div>

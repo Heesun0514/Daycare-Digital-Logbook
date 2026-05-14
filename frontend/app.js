@@ -293,7 +293,7 @@ async function generateReport(){
             <td>${record.id}</td>
             <td>${record.child_name}</td>
             <td>${record.arrival_time}</td>
-            <td>${record.departure_time}</td>
+            <td>${record.departure_time || '-'}</td>
             <td>${record.date}</td>
              
             </tr>`;
