@@ -421,19 +421,6 @@ db.all(sql,[from,to],(err,rows)=>{
     
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 // Start the server
 app.listen(port,()=>{
     console.log("Server is running"); // Show in terminal
