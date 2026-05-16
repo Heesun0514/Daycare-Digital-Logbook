@@ -49,4 +49,22 @@ db.serialize(()=>{
     });
 });
 
+
+// Create parent_child table to link parents with their children 
+db.run(`
+    CREATE TABLE IF NOT EXISTS parent_child(
+    id INEGER PRIMARY KEY AUTOINCREMENT,
+    parent_email TEXT NOT NULL,
+    child_name NTEXT NOT NULL,
+    create_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(parent_email,child_name)
+    )
+    `,(err)=>{
+        if(err){
+            console.error('❌ Parent-child table creation error:', err.message);
+        } else {
+            console.log('✅ Parent-child relationship table ready')
+        }
+    })
+
 module.exports= db;
