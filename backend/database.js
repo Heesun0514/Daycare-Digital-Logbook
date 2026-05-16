@@ -36,6 +36,7 @@ db.serialize(()=>{
       CREATE TABLE IF NOT EXISTS attendance (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       child_name TEXT NOT NULL,
+      parent_email TEXT,
       arrival_time TEXT,
       departure_time TEXT,
       date TEXT NOT NULL
@@ -47,25 +48,9 @@ db.serialize(()=>{
             console.log('✅ Attendance table ready');
         }
     });
-});
 
 
-// Create parent_child table to link parents with their children 
-db.run(`
-    CREATE TABLE IF NOT EXISTS parent_child(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    parent_email TEXT NOT NULL,
-    child_name TEXT NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(parent_email,child_name)
-    )
-    `,(err)=>{
-        if(err){
-            console.error('❌ Parent-child table creation error:', err.message);
-        } else {
-            console.log('✅ Parent-child relationship table ready');
-        }
-    })
+    });
 
     // insert sample data for testing 
 
