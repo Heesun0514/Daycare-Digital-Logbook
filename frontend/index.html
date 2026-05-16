@@ -73,10 +73,13 @@
 
     
     <!-- Parent View -->
-    <div id="parent-section">
-        <input type="email" id="parent-email" placeholder="Enter your email">
-        <button onclick="viewChildStatus()">View My Child</button>
-        <div id="child-status"></div>
+    <div style="border:1px solid #FF6B9D; padding:15px; margin:10px 0; border-radius:5px">
+        <h2>👨‍👩‍👧 Parent: View Your Child's Status</h2>
+        <div>
+            <input type="email" id="parent-email" placeholder="Enter your email" required>
+            <button onclick="viewChildStatus()" style="background-color: #FF6B9D; color: white;">🔍 View My Child</button>
+        </div>
+        <div id="child-status" style="margin-top:10px"></div>
     </div>
 </div>
 <script src="app.js"></script>

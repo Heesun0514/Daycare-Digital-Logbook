@@ -408,3 +408,87 @@ async function downloadReport(){
     // Releases the temporary URL from memory to optimize performance and prevent memory leaks.
     URL.revokeObjectURL(url);
 }
+
+
+
+
+// ============== 7.Parent View: View Child Status (Frontend Filtering) ====================
+
+async function viewChildStatus(){
+    
+    //1. grab the parent email 
+    const parentEmail = document.getElementById('parent-email').value.toLowerCase().trim();
+    
+    //2. input validation 
+    if (!parentEmail){
+        alert('Please enter your email');
+        return;
+    }
+    
+    //3. validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(parentEmail)){
+        alert('Please enter a valid email address');
+        return;
+    }
+
+    //4. get today's date 
+    const today = new Date().toISOString().split('T')[0];
+
+    try {
+        //5. Use existing REPORT API to get all today's attendance
+        const response = await fetch(`http://localhost:3000/api/attendance/report?from=${today}&to=${today}`);
+        
+        //6. parse the response
+        const result = await response.json();
+        
+        if (response.status === 200){
+            const allRecords = result.record || [];
+            
+            //7. Filter records by parent email
+            const childrenRecords = allRecords.filter(record => 
+                record.parent_email && record.parent_email.toLowerCase() === parentEmail
+            );
+            
+            //8. show message if no records 
+            if (childrenRecords.length === 0){
+                document.getElementById('child-status').innerHTML = `
+                    <div style="background-color: #FFE4E1; padding: 15px; border-radius: 5px; border-left: 4px solid #FF6B9D;">
+                        <p>📭 No children found for this email address, or no attendance recorded for today.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            //9. Build HTML display 
+            let html = `<div style="background-color: #FFF0F5; padding: 15px; border-radius: 5px; border-left: 4px solid #FF6B9D;">`;
+            html += `<h3>👨‍👩‍👧 Your Child(ren)'s Status Today</h3>`;
+            html += `<table border="1" cellpadding="10" style="border-collapse: collapse; width: 100%; margin-top: 10px;">`;
+            html += `<tr style="background-color: #FF6B9D; color: white;">`;
+            html += `<th>Child Name</th><th>Arrival Time</th><th>Departure Time</th><th>Current Status</th>`;
+            html += `</tr>`;
+            
+            childrenRecords.forEach(child => {
+                const status = child.departure_time ? '✅ Picked Up' : '🟢 At Daycare';
+                html += `<tr>`;
+                html += `<td><strong>${child.child_name}</strong></td>`;
+                html += `<td>${child.arrival_time || '-'}</td>`;
+                html += `<td>${child.departure_time || '-'}</td>`;
+                html += `<td>${status}</td>`;
+                html += `</tr>`;
+            });
+            
+            html += `</table>`;
+            html += `<p style="margin-top: 10px; font-size: 12px; color: #666;">Last updated: ${new Date().toLocaleTimeString()}</p>`;
+            html += `</div>`;
+            
+            document.getElementById('child-status').innerHTML = html;
+            
+        } else {
+            document.getElementById('child-status').innerHTML = `<p>❌ ${result.error || 'Error fetching attendance data'}</p>`;
+        }
+        
+    } catch(error){
+        document.getElementById('child-status').innerHTML = `<p>❌ Connection error: ${error.message}</p>`;
+    }
+}
