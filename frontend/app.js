@@ -1,7 +1,49 @@
+// ============== Helper functions  ====================
+
+ 
+ // Get current time in HH:MM format
+function getCurrentTime() {
+    const now = new Date();
+    return now.toTimeString().slice(0, 5); // Grabs the "HH:MM" part
+}
+
+// Get today's date in YYYY-MM-DD format
+function getCurrentDate() {
+    return new Date().toISOString().split('T')[0];}
+
 // API BAse URL
 
 const API_BASE='http://localhost:3000/api/attendance';
 
+
+
+// ============== Check in now   ====================
+
+// Automatically check-in with current date and time 
+async function checkinNow(){
+
+    //1.Auto-fill the date and time inputs 
+
+    document.getElementById('checkinDate').value=getCurrentDate();
+    document.getElementById('arrivalTime').value=getCurrentTime();
+
+    //2. Run check-in logic 
+    await checkin();
+}
+
+
+// ============== Check out now   ====================
+
+
+// Automatically check-out with current date and time 
+async function checkoutNow(){
+
+    //1.Auto-fill the departure time input
+    document.getElementById('departureTime').value=getCurrentTime();
+
+    //2. Run check-out logic 
+    await checkout();
+}
 
 // ============== 1.CHECK-IN (CREATE) ====================
 

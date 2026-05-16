@@ -17,6 +17,8 @@
             <input type="time" id="arrivalTime" value="09:00">
             <input type="date" id="checkinDate">
             <button onclick="checkin()">➕ Check In</button>
+            <button onclick="checkinNow()" style="background-color: #4CAF50; color: white;">⚡ Check In Now</button>
+
         </div>
         <div id="checkinResult" style="margin-top:10px"></div>
     </div>
@@ -27,7 +29,8 @@
         <div>
             <input type="number" id="checkoutId" placeholder="Record ID" required>
             <input type="time" id="departureTime" value="17:00">
-            <button onclick="checkout()">🚪 Check Out</button>
+            <button onclick="checkout()">🚪 Manual Check Out</button>
+            <button onclick="checkoutNow()" style="background-color: #008CBA; color: white;">⚡ Check Out Now</button>
         </div>
         <div id="checkoutResult" style="margin-top:10px"></div>
     </div>
