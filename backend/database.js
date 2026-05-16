@@ -49,14 +49,24 @@ db.serialize(()=>{
         }
     });
 
+  // Create children table to store parent-child relationship
+  
+  db.run(`
+        CREATE TABLE IF NOT EXISTS children(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        child_name TEXT NOT NULL UNIQUE,
+        parent_email TEXT NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+        `,(err)=>{
+            if(err){
+                console.error('❌ Children table creation error:', err.message);
+            }else {
+                console.log('✅ Children table ready');
+            }
+        });
+
 
     });
-
-    // insert sample data for testing 
-
-
-
-
-
 
 module.exports= db;

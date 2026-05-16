@@ -18,6 +18,57 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname,'../frontend')));
 
 
+// ============== HELPER FUNCTION ====================
+// Auto-generate parent email from child name
+function generateParentEmail(childName) {
+    // Convert child name to lowercase and replace spaces with dots
+    // Example: "Emma Johnson" → "emma.johnson@daycare.local"
+    const sanitized = childName
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, '.')
+        .replace(/[^a-z0-9.]/g, ''); // Remove special characters
+    
+    return `${sanitized}@daycare.local`;
+}
+
+// Function to register or retrieve parent email for a child
+function getOrCreateParentEmail(childName, callback) {
+    const parentEmail = generateParentEmail(childName);
+    
+    // Check if child already exists
+    db.get(
+        `SELECT parent_email FROM children WHERE child_name = ?`,
+        [childName],
+        (err, row) => {
+            if (err) {
+                return callback(err, null);
+            }
+            
+            if (row) {
+                // Child already registered, return existing parent email
+                return callback(null, row.parent_email);
+            }
+            
+            // Child not found, register new child
+            db.run(
+                `INSERT INTO children (child_name, parent_email) VALUES (?, ?)`,
+                [childName, parentEmail],
+                function(err) {
+                    if (err) {
+                        // If insert fails (duplicate name), just return the generated email
+                        return callback(null, parentEmail);
+                    }
+                    callback(null, parentEmail);
+                }
+            );
+        }
+    );
+}
+
+
+
+
 // 1.create (post) Adds new data : check-in
 app.post('/api/attendance/checkin',(req,res)=>
 {
@@ -35,7 +86,13 @@ app.post('/api/attendance/checkin',(req,res)=>
 
    }
 
-   // 1.2 Save to database 
+   // 1.2 Auto-generate parent_email from child_name 
+   getOrCreateParentEmail(child_name,(err,prarentEmail)=>{
+    if(err){
+        return res.status(500).json({error:err.message});
+   }
+   
+   // 1.3 Save to database with auto-generated parent_email 
                 //The ? symbols are placeholders that keep the database safe from hackers (SQL injection).
    const sql=`INSERT INTO attendance(child_name,arrival_time,date)VALUES(?,?,?);`
    
@@ -52,6 +109,7 @@ app.post('/api/attendance/checkin',(req,res)=>
    res.status(201).json({
     id:this.lastID,
     child_name,
+    parent_email:parentEmail,
     arrival_time,
     date,
     message:'✅ Check-in successful'
