@@ -366,7 +366,7 @@ async function generateReport(){
 async function downloadReport(){
 
    //1. check if report data exist 
-    if(!window.reportData || window.reportData,length===0){
+    if(!window.reportData || window.reportData.length===0){
         alert('Please generate a report first');
         return;
     }
