@@ -442,3 +442,10 @@ Daycare-Digital-Logbook/ # Root folder
 ## 6. Attributions
 
 
+- **GitHub Copilot**: [Conversation Reference](https://github.com/copilot/c/7a15ef38-e45a-44a7-a1ca-eb556f0f68e8)
+- **Google Gemini**: [Conversation Reference](https://gemini.google.com/app/4442f865e0e66f75)
+
+
+**For a detailed, line-by-line record of AI prompts and code changes, please refer to the full documentation:**
+📄 [**Complete Project Documentation (Google Docs)**](https://docs.google.com/document/d/1ZdpxEJkm0rWf6x-e28wwlwvCubOeQxV2J4zNFa6sdmc/edit?usp=sharing)
+
