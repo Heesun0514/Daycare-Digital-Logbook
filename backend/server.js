@@ -70,8 +70,7 @@ function getOrCreateParentEmail(childName, callback) {
 
 
 // 1.create (post) Adds new data : check-in
-app.post('/api/attendance/checkin',(req,res)=>
-{
+app.post('/api/attendance/checkin',(req,res)=>{
     // receice data from client 
    const {child_name,arrival_time,date}=req.body;
 
@@ -115,7 +114,7 @@ app.post('/api/attendance/checkin',(req,res)=>
     message:'✅ Check-in successful'
    });
 });
-
+});
 });
 
 
