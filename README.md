@@ -79,6 +79,39 @@
 
 1.4 Data requirements 
 
+### 1.4 Data Requirements
+
+The system uses SQLite database with two tables: `attendance` and `children`.
+
+#### attendance Table
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | INTEGER PRIMARY KEY | Auto-increment record ID |
+| child_name | TEXT NOT NULL | Name of the child |
+| parent_email | TEXT | Auto-generated parent email |
+| arrival_time | TEXT | Check-in time (HH:MM) |
+| departure_time | TEXT | Check-out time (HH:MM, nullable) |
+| date | TEXT NOT NULL | Attendance date (YYYY-MM-DD) |
+
+#### children Table
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | INTEGER PRIMARY KEY | Auto-increment record ID |
+| child_name | TEXT NOT NULL UNIQUE | Name of the child (unique) |
+| parent_email | TEXT NOT NULL | Auto-generated parent email |
+| created_at | DATETIME | Timestamp of creation |
+
+#### Validation Rules
+
+| Field | Rule |
+|-------|------|
+| child_name | Required, cannot be empty |
+| arrival_time | Required for check-in, format HH:MM |
+| date | Required, format YYYY-MM-DD |
+| departure_time | Optional, can only be set after arrival |
+
 1.5 Use Cases  
 
 ---
@@ -321,8 +354,36 @@
 ## 3. System Architecture
 
 ### 3.1 API Endpoints
+
+### 3.1 API Endpoints
+
+| Method | Endpoint | Description | Request Body | Response |
+|--------|----------|-------------|--------------|----------|
+| POST | `/api/attendance/checkin` | Check-in a child | `{ child_name, arrival_time, date }` | `{ id, child_name, parent_email, arrival_time, date, message }` |
+| PUT | `/api/attendance/checkout/:id` | Check-out a child | `{ departure_time }` | `{ success, message, record }` |
+| PUT | `/api/attendance/:id` | Edit attendance time | `{ arrival_time, departure_time, date }` | `{ success, message, record }` |
+| GET | `/api/attendance/report?from=YYYY-MM-DD&to=YYYY-MM-DD` | Generate report | None (query params) | `{ success, message, record }` |
+
+
 ### 3.2 Tech Stack
+
+### 3.2 Tech Stack
+
+| Layer | Technology |
+|-------|------------|
+| **Backend Runtime** | Node.js |
+| **Backend Framework** | Express.js |
+| **Database** | SQLite3 |
+| **Frontend** | HTML5, CSS3, Vanilla JavaScript |
+| **Testing** | Jest + Supertest |
+| **CI/CD** | GitHub Actions |
+| **Version Control** | Git & GitHub |
+
 ### 3.3 Database
+
+I used SQLite because it’s a serverless database. It’s perfect for this prototype because it ensures data integrity (like keeping child records organized) while staying lightweight. It makes the app easier to deploy and test as a proof-of-concept.
+
+
 ### 3.4 Project Structure
 
 ```
@@ -337,6 +398,7 @@ Daycare-Digital-Logbook/ # Root folder
 │ ├── database.js # SQLite connection file ✅
 │ ├── package-lock.json # Dependency lock file ✅
 │ ├── package.json # Project configuration file ✅
+│ ├── seed-data.js # Test data seeding script ✅ 
 │ └── server.js # Express server file ✅
 │
 ├── frontend/ # Frontend folder
@@ -434,10 +496,77 @@ Daycare-Digital-Logbook/ # Root folder
 | TC-16 | Return empty array when no records | 200 | 200 | ✅ PASS |
 | TC-17 | Reject missing date parameters | 400 | 400 | ✅ PASS |
   
+### 4.6 Integration Test Results
+
+Integration tests verify that multiple components work together correctly. The test simulates a complete daycare workflow from check-in to check-out.
+
+#### Test INT-01: Complete Attendance Workflow
+
+| Step | Operation | Expected Result | Actual | Status |
+|------|-----------|-----------------|--------|--------|
+| 1 | Check-in child (Emma Johnson, 09:00) | 201 Created, parent_email auto-generated | ✅ | PASS |
+| 2 | Verify child in attendance report | Record found, departure_time = NULL | ✅ | PASS |
+| 3 | Check-out child (17:30) | 200 OK, departure_time saved | ✅ | PASS |
+| 4 | Verify departure time in report | departure_time = 17:30 | ✅ | PASS |
+| 5 | Generate full date range report | 200 OK, records returned | ✅ | PASS |
+
+#### Test INT-02: Multiple Children Same Day
+
+| Step | Operation | Expected Result | Actual | Status |
+|------|-----------|-----------------|--------|--------|
+| 1 | Check-in 3 children (Alice, Bob, Charlie) | 201 each, emails auto-generated | ✅ | PASS |
+| 2 | Verify all 3 in attendance report | 3 records found | ✅ | PASS |
+| 3 | Check-out Alice and Charlie | 200 OK for both | ✅ | PASS |
+| 4 | Verify remaining child still present | Bob has departure_time = NULL | ✅ | PASS |
+
+#### Integration Test Execution Output
+
+```bash
+user@MacBookAir backend % npm test -- -t "INTEGRATION"
+
+  console.log
+    ✅ Step 1 Passed: Checked in. Server generated email: emma.johnson@daycare.local
+
+  console.log
+    ✅ Step 2 Passed: Child verified in report filtered by captured email
+
+  console.log
+    ✅ Step 3 Passed: Child checked out at 17:30
+
+  console.log
+    ✅ Step 4 Passed: Departure time verified in parent-filtered report
+
+  console.log
+    ✅ Step 5 Passed: Full date range report generated successfully
+
+  console.log
+    ℹ️ Step 1 & 2 (INT-02): Records verified as unique individual profiles
+
+  console.log
+    ✅ INT-02 Passed: All 3 children verified
+
+ PASS  ./attendance.test.js
+  🔄 INTEGRATION TEST - Full Attendance Workflow
+    ✓ INT-01: Complete workflow (49 ms)
+    ✓ INT-02: Multiple children in same day (41 ms)
+
+Tests: 2 passed, 2 total
+```
 
 ## 5. Additional Features
 
----
+| Feature | Description | Benefit |
+|---------|-------------|---------|
+| ⚡ **Check-in NOW** | One-click check-in with current time | No manual time selection, saves teacher time |
+| ⚡ **Check-out NOW** | One-click check-out with current time | Faster checkout process |
+| 📧 **Auto-generated Parent Email** | Email from child name (e.g., emma.johnson@daycare.local) | No manual email entry, consistent across days |
+| 👪 **Parent View** | Parents view child status using email | Real-time attendance visibility |
+| 📊 **CSV Report Download** | Export attendance report as CSV file | Easy sharing with inspectors |
+| 🔄 **Auto-refresh Attendance List** | Updates after check-in/check-out/edit | Always shows current status |
+| 🔐 **Duplicate Check-out Prevention** | Cannot check out same child twice | Data integrity |
+| 🧪 **Integration Tests** | Full workflow testing (20 total tests) | Reliable system |
+| 🚀 **CI/CD Pipeline** | GitHub Actions automated testing | Quality assurance on every push |
+| 📱 **Mobile-Friendly Design** | Works on tablets and phones | Teachers can use devices while moving |
 
 ## 6. Attributions
 
