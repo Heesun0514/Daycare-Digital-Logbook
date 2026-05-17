@@ -53,3 +53,29 @@ db.serialize(()=>{
 
     
 });
+
+
+
+/*
+
+user@MacBookAir backend % node serve
+r.js
+Server is running
+ Express server runing at http://localhost:3000
+✅ Connected to daycare.db
+✅ Attendance table ready
+✅ Children table ready
+user@MacBookAir backend % 
+user@MacBookAir backend % node seed-
+data.js
+Seeding database.....
+✅ Connected to daycare.db
+✅ Attendance table ready
+✅ Children table ready
+✅ Added: Emma Johnson (emma.johnson@daycare.local)
+✅ Added: Liam Smith (liam.smith@daycare.local)
+✅ Added: Olivia Brown (olivia.brown@daycare.local)
+✅ Added: Noah Davis (noah.davis@daycare.local)
+
+
+*/
