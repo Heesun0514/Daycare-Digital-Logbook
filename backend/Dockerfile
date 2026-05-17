@@ -1,5 +1,8 @@
-# Use the official Node.js image
-FROM node:18-slim
+# BEFORE:
+# FROM node:18-slim
+
+# AFTER: Use Node 20 or 22 slim, which includes updated system libraries
+FROM node:22-slim
 
 # Create app directory
 WORKDIR /usr/src/app
