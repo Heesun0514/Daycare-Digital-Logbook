@@ -15,12 +15,15 @@ jobs:
       with:
         node-version: 18.x
         cache: 'npm'
+        cache-dependency-path: backend/package-lock.json  # ← Added!
         
     - name: Install dependencies
-      run: npm install
+      run: npm ci
+      working-directory: ./backend  # ← Added!
       
     - name: Run Integration Tests
       run: npm test
+      working-directory: ./backend  # ← Added!
 
   deploy:
     needs: test
@@ -44,6 +47,7 @@ jobs:
     - name: Build and Push Container
       run: |
         IMAGE_NAME=us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/daycare-repo/attendance-app:${{ github.sha }}
+        cd backend  # ← Added! (Dockerfile in backend)
         docker build -t $IMAGE_NAME .
         docker push $IMAGE_NAME
 
