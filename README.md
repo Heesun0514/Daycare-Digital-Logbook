@@ -343,7 +343,7 @@ The system uses SQLite database with two tables: `attendance` and `children`.
 | Operation | Description | API Endpoint |
 |-----------|-------------|--------------|
 | Create | Record arrival time | `POST /api/attendance/checkin` |
-| Read | View today's attendance | `GET /api/attendance/today` |
+| Read | View today's attendance | `GET /api/attendance/report` |
 | Read | Generate report | `GET /api/attendance/report?from=` |
 | Update | Record departure time | `PUT /api/attendance/checkout/:id` |
 | Update | Edit arrival/departure | `PUT /api/attendance/:id` |
