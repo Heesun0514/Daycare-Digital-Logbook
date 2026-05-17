@@ -355,8 +355,6 @@ The system uses SQLite database with two tables: `attendance` and `children`.
 
 ### 3.1 API Endpoints
 
-### 3.1 API Endpoints
-
 | Method | Endpoint | Description | Request Body | Response |
 |--------|----------|-------------|--------------|----------|
 | POST | `/api/attendance/checkin` | Check-in a child | `{ child_name, arrival_time, date }` | `{ id, child_name, parent_email, arrival_time, date, message }` |
@@ -364,8 +362,6 @@ The system uses SQLite database with two tables: `attendance` and `children`.
 | PUT | `/api/attendance/:id` | Edit attendance time | `{ arrival_time, departure_time, date }` | `{ success, message, record }` |
 | GET | `/api/attendance/report?from=YYYY-MM-DD&to=YYYY-MM-DD` | Generate report | None (query params) | `{ success, message, record }` |
 
-
-### 3.2 Tech Stack
 
 ### 3.2 Tech Stack
 
