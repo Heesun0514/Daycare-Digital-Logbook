@@ -18,6 +18,14 @@ const port = process.env.PORT || 8080;
 app.use(express.json());
 app.use(express.static(path.join(__dirname,'../frontend')));
 
+// Add this near your other routes (e.g., in server.js or app.js)
+app.get('/', (req, res) => {
+    res.status(200).json({
+        status: "online",
+        message: "👶 Daycare Attendance API is running successfully!",
+        environment: process.env.NODE_ENV || "development"
+    });
+});
 
 // ============== HELPER FUNCTION ====================
 // Auto-generate parent email from child name
