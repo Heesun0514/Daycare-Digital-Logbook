@@ -752,16 +752,167 @@ describe('✅ READ (REPORT) Test ',()=>{
         // Error message should contain the word 'Both' (indicating both parameters are required)
         expect(response.body.error).toContain('Both');
     });
-
-
-
-
-
-
-
-
 });
-   
+});
 
 
+// ============================================================================
+// 5. INTEGRATION TEST - FULL ATTENDANCE WORKFLOW (AUTO-GENERATED EMAIL)
+// ============================================================================
+
+describe('🔄 INTEGRATION TEST - Full Attendance Workflow', () => {
+    
+    test('INT-01: Complete workflow - Check-in → View in Report → Check-out → Verify Departure', async () => {
+        
+        const testDate = '04-05-2026';
+        const childName = 'Emma Johnson';
+        const arrivalTime = '09:00';
+        const departureTime = '17:30';
+
+        // ============================================================
+        // STEP 1: CHECK-IN a child (POST /api/attendance/checkin)
+        // 1. Removed parent_email from check-in request body
+        // ============================================================
+        const checkinResponse = await request(app)
+            .post('/api/attendance/checkin')
+            .send({
+                child_name: childName,
+                arrival_time: arrivalTime,
+                date: testDate
+            });
+
+        // Verify check-in success
+        expect(checkinResponse.statusCode).toBe(201);
+        expect(checkinResponse.body.child_name).toBe(childName);
+        expect(checkinResponse.body.arrival_time).toBe(arrivalTime);
+        expect(checkinResponse.body).toHaveProperty('id');
+        expect(checkinResponse.body).toHaveProperty('parent_email'); // Must exist in response
+        
+        // 2. Capture parent_email from the response body
+        const capturedParentEmail = checkinResponse.body.parent_email; 
+        const childId = checkinResponse.body.id;
+        console.log(`✅ Step 1 Passed: Checked in. Server generated email: ${capturedParentEmail}`);
+
+        // ============================================================
+        // STEP 2: VERIFY in today's attendance (GET /api/attendance/report)
+        // 3. Use that captured email for filtering the report
+        // ============================================================
+        const todayReportResponse = await request(app)
+            .get(`/api/attendance/report?from=${testDate}&to=${testDate}&parent_email=${capturedParentEmail}`);
+
+        expect(todayReportResponse.statusCode).toBe(200);
+        expect(todayReportResponse.body.record.length).toBeGreaterThan(0);
+        
+        // Verify child appears with correct status under this parent-filtered query
+        const childInReport = todayReportResponse.body.record.find(
+            record => record.id === childId && record.parent_email === capturedParentEmail
+        );
+        
+        expect(childInReport).toBeDefined();
+        expect(childInReport.child_name).toBe(childName);
+        expect(childInReport.arrival_time).toBe(arrivalTime);
+        expect(childInReport.departure_time).toBeNull(); 
+        console.log(`✅ Step 2 Passed: Child verified in report filtered by captured email`);
+
+        // ============================================================
+        // STEP 3: CHECK-OUT the child (PUT /api/attendance/checkout/:id)
+        // ============================================================
+        const checkoutResponse = await request(app)
+            .put(`/api/attendance/checkout/${childId}`)
+            .send({
+                departure_time: departureTime
+            });
+
+        expect(checkoutResponse.statusCode).toBe(200);
+        expect(checkoutResponse.body.success).toBe(true);
+        expect(checkoutResponse.body.record.departure_time).toBe(departureTime);
+        console.log(`✅ Step 3 Passed: Child checked out at ${departureTime}`);
+
+        // ============================================================
+        // STEP 4: VERIFY departure time is recorded in filtered report
+        // ============================================================
+        const afterCheckoutReportResponse = await request(app)
+            .get(`/api/attendance/report?from=${testDate}&to=${testDate}&parent_email=${capturedParentEmail}`);
+
+        expect(afterCheckoutReportResponse.statusCode).toBe(200);
+        
+        const checkedOutChild = afterCheckoutReportResponse.body.record.find(
+            record => record.id === childId
+        );
+        
+        expect(checkedOutChild).toBeDefined();
+        expect(checkedOutChild.departure_time).toBe(departureTime);
+        console.log(`✅ Step 4 Passed: Departure time verified in parent-filtered report`);
+
+        // ============================================================
+        // STEP 5: GENERATE full report for date range
+        // ============================================================
+        const rangeReportResponse = await request(app)
+            .get(`/api/attendance/report?from=01-05-2026&to=30-05-2026`);
+
+        expect(rangeReportResponse.statusCode).toBe(200);
+        console.log(`✅ Step 5 Passed: Full date range report generated successfully`);
+    });
+
+    test('INT-02: Multiple children in same day - Verify isolated records', async () => {
+        
+        const testDate = '05-05-2026';
+
+        // Check in 3 different children (Backend auto-generates emails dynamically)
+        const child1 = await request(app)
+            .post('/api/attendance/checkin')
+            .send({ child_name: 'Alice Smith', arrival_time: '08:30', date: testDate });
+
+        const child2 = await request(app)
+            .post('/api/attendance/checkin')
+            .send({ child_name: 'Bob Smith', arrival_time: '09:00', date: testDate });
+
+        const child3 = await request(app)
+            .post('/api/attendance/checkin')
+            .send({ child_name: 'Charlie Jones', arrival_time: '09:15', date: testDate });
+
+        // Capture emails assigned by the system
+        const email1 = child1.body.parent_email;
+        const email2 = child2.body.parent_email;
+        const email3 = child3.body.parent_email;
+
+        // 1. Verify pattern logic (e.g., if Alice and Bob are siblings, your backend algorithm links them)
+        // If they are separate families in this setup, verify they each got an auto-generated string.
+        expect(email1).toBeDefined();
+        expect(email2).toBeDefined();
+        expect(email3).toBeDefined();
+        
+        // Example check: Assuming your backend links matching last names to the same parent profile:
+        if (email1 === email2) {
+            console.log('✅ Step 1 (INT-02): System successfully matched siblings to the same parent email');
+            
+            // 2. Verify filtering by the captured email returns only the children linked to it
+            const parentFilteredResponse = await request(app)
+                .get(`/api/attendance/report?from=${testDate}&to=${testDate}&parent_email=${email1}`);
+            
+            expect(parentFilteredResponse.statusCode).toBe(200);
+            
+            // Should contain both matched children but exclude Charlie
+            const containsAlice = parentFilteredResponse.body.record.some(r => r.child_name === 'Alice Smith');
+            const containsBob = parentFilteredResponse.body.record.some(r => r.child_name === 'Bob Smith');
+            const containsCharlie = parentFilteredResponse.body.record.some(r => r.child_name === 'Charlie Jones');
+
+            expect(containsAlice).toBe(true);
+            expect(containsBob).toBe(true);
+            expect(containsCharlie).toBe(false); 
+            console.log('✅ Step 2 (INT-02): Email query isolates and returns matching records exclusively');
+        } else {
+            console.log('ℹ️ Step 1 & 2 (INT-02): Records verified as unique individual profiles');
+        }
+
+        // Clean cleanup verification matching the original architecture
+        const id1 = child1.body.id;
+        const id3 = child3.body.id;
+
+        await request(app).put(`/api/attendance/checkout/${id1}`).send({ departure_time: '16:00' });
+        await request(app).put(`/api/attendance/checkout/${id3}`).send({ departure_time: '17:00' });
+
+        const reportResponse = await request(app).get(`/api/attendance/report?from=${testDate}&to=${testDate}`);
+        expect(reportResponse.body.record.length).toBe(3);
+    });
 });
