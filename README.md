@@ -79,8 +79,6 @@
 
 1.4 Data requirements 
 
-### 1.4 Data Requirements
-
 The system uses SQLite database with two tables: `attendance` and `children`.
 
 #### attendance Table
