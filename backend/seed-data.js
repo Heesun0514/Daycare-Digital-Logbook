@@ -12,5 +12,41 @@ db.serialize(()=>{
 
     ];
 
+    testData.forEach(data=>{
+        // Helper function to generate parent email 
+
+        const generateParentEmail=(childName)=>{
+            const sanitized=childName
+            .toLowerCase()
+            .trim()
+            .replace(/\s+/g,'.')
+            .replace(/[^a-z0-9.]/g,'');
+            return `${sanitized}@daycare.local`;
+        };
+
+        const parentEmail=generateParentEmail(data.child_name);
+
+        // Register child if not already registered 
+
+        db.run(
+            `INSERT OR IGNORE INTO children(child_name,parent_email) VALUES(?,?),`[data.child_name.parentEmail]
+        );
+
+        // Insert attendance record 
+
+        db.run(
+            `INSERT INTO attendance (child_name,parent_email,arriavl_time,departure_time,date) VALUES(?,?,?,?,?)`,
+            [data.child_name,parentEmail,data.arrival_time,data.departure_time,data.date],
+            function(err){
+                if(err){
+                    console.error('❌ Insert error:', err.message);
+                } else {
+                    console.log (`✅ Added: ${data.child_name} (${parentEmail})`);
+                }
+            }
+        )
     
-})
+    });
+
+    
+});
