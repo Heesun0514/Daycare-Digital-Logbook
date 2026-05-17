@@ -373,7 +373,7 @@ async function downloadReport(){
 
     //2. create CSV content 
 
-    let csv='ID,Child Name,Arriavle Time,Depature Time,Data\n';
+    let csv='ID,Child Name,Arrival Time,Depature Time,Date\n';
 
     window.reportData.forEach(record=>{
         csv +=`${record.id},${record.child_name},${record.arrival_time},${record.departure_time ||''}, ${record.date}\n`;
