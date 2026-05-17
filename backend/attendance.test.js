@@ -8,51 +8,62 @@ const app = express();
 // create a test app 
 app.use(express.json()) 
 
+// ============== HELPER FUNCTIONS FOR TEST ====================
+function generateParentEmail(childName) {
+    const sanitized = childName
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, '.')
+        .replace(/[^a-z0-9.]/g, '');
+    return `${sanitized}@daycare.local`;
+}
 
-
-// 1.create (post) Adds new data : check-in
-app.post('/api/attendance/checkin',(req,res)=>
-{
-    // receice data from client 
-   const {child_name,arrival_time,date}=req.body;
-
-   // 1.1 check if all data exists (validation)
-   if ( !child_name || ! arrival_time || ! date){
-
-    //"Bad Request" error (400)
-    return res.status(400).json({
-        error:'child_name,arrival_time,date are required'
+function getOrCreateParentEmail(childName, callback) {
+    const parentEmail = generateParentEmail(childName);
+    
+    db.get(`SELECT parent_email FROM children WHERE child_name = ?`, [childName], (err, row) => {
+        if (err) return callback(err, null);
+        if (row) return callback(null, row.parent_email);
         
+        db.run(`INSERT INTO children (child_name, parent_email) VALUES (?, ?)`, [childName, parentEmail], (err) => {
+            callback(null, parentEmail);
+        });
     });
+}
 
-   }
+// ============== 1. CHECK-IN API (UPDATED with parent_email) ====================
+app.post('/api/attendance/checkin', (req, res) => {
+    const { child_name, arrival_time, date } = req.body;
 
-   // 1.2 Save to database 
-                //The ? symbols are placeholders that keep the database safe from hackers (SQL injection).
-   const sql=`INSERT INTO attendance(child_name,arrival_time,date)VALUES(?,?,?);`
-   
-   //Run the SQL query with the actual values
-        //db.run "writing" or "modifying (INSERT,UPDATE,DELETE)
-   db.run(sql,[child_name,arrival_time,date],function(err){ //Callback Function,asynchronous
-
-    //If database error occurs, send 500 server error.
-    if(err){
-        return res.status(500).json({error:err.message})
+    if (!child_name || !arrival_time || !date) {
+        return res.status(400).json({
+            error: 'child_name,arrival_time,date are required'
+        });
     }
 
-   //If successful, send back 201 (created) with the new data and success message.
-   res.status(201).json({
-    id:this.lastID,
-    child_name,
-    arrival_time,
-    date,
-    message:'✅ Check-in successful'
-   });
+    getOrCreateParentEmail(child_name, (err, parentEmail) => {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+
+        const sql = `INSERT INTO attendance (child_name, parent_email, arrival_time, date) VALUES (?, ?, ?, ?)`;
+        
+        db.run(sql, [child_name, parentEmail, arrival_time, date], function(err) {
+            if (err) {
+                return res.status(500).json({ error: err.message });
+            }
+
+            res.status(201).json({
+                id: this.lastID,
+                child_name,
+                parent_email: parentEmail,
+                arrival_time,
+                date,
+                message: '✅ Check-in successful'
+            });
+        });
+    });
 });
-
-});
-
-
 
 // 2.Update (put) Modifies exiting data : check-out
 app.put('/api/attendance/checkout/:id',(req,res)=> 
@@ -359,13 +370,13 @@ if (!from || ! to) {
     });
 }
 
-//4.3 Date format Validation (DD-MM-YYYY)
-    //Uses a Regular Expression (Regex) to ensure the dates follow the DD-MM-YYYY format.
+//4.3 Date format Validation YYYY-MM-DD
+    //Uses a Regular Expression (Regex) to ensure the dates follow the YYYY-MM-DD format.
 
-    const dateRegex = /^\d{2}-\d{2}-\d{4}$/;
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
     if (!dateRegex.test(from) || !dateRegex.test(to)) {
         return res.status(400).json({
-            error: 'Invalid date format. Use DD-MM-YYYY. Example: 24-04-2026'
+            error: 'Invalid date format.Use YYYY-MM-DD. Example: 2026-05-14'
         });
     }
     
@@ -730,7 +741,7 @@ describe('✅ READ (REPORT) Test ',()=>{
        
         const response= await request(app) 
                 //no data exists in database
-        .get('/api/attendance/report?from2026-05-02&to=2026-05-03') 
+        .get('/api/attendance/report?from=2026-05-02&to=2026-05-03') 
 
                 //Server returns 200 (not 404) because the endpoint itself exists
         expect(response.statusCode).toBe(200);
@@ -846,7 +857,7 @@ describe('🔄 INTEGRATION TEST - Full Attendance Workflow', () => {
         // STEP 5: GENERATE full report for date range
         // ============================================================
         const rangeReportResponse = await request(app)
-            .get(`/api/attendance/report?from=2026-05-01&to=30-05-2026`);
+            .get(`/api/attendance/report?from=2026-05-01&to=2026-05-03`);
 
         expect(rangeReportResponse.statusCode).toBe(200);
         console.log(`✅ Step 5 Passed: Full date range report generated successfully`);
