@@ -412,12 +412,12 @@ async function downloadReport(){
 
 
 
-// ============== 7.Parent View: View Child Status (Frontend Filtering) ====================
+// ============== 7.Parent View: View Child Status  ====================
 
 async function viewChildStatus(){
     
     //1. grab the parent email 
-    const parentEmail = document.getElementById('parent-email').value.toLowerCase().trim();
+    const parentEmail = document.getElementById('parent-email').value;
     
     //2. input validation 
     if (!parentEmail){
@@ -432,10 +432,12 @@ async function viewChildStatus(){
         return;
     }
 
-    //4. get today's date 
-    const today = new Date().toISOString().split('T')[0];
-
+   
     try {
+
+         //4. get today's date 
+        const today = new Date().toISOString().split('T')[0];
+
         //5. Use existing REPORT API to get all today's attendance
         const response = await fetch(`http://localhost:3000/api/attendance/report?from=${today}&to=${today}`);
         
@@ -447,22 +449,19 @@ async function viewChildStatus(){
             
             //7. Filter records by parent email
             const childrenRecords = allRecords.filter(record => 
-                record.parent_email && record.parent_email.toLowerCase() === parentEmail
+                record.parent_email && record.parent_email.toLowerCase() === parentEmail.toLowerCase()
             );
             
-            //8. show message if no records 
+            //8. show message if no for this parent
             if (childrenRecords.length === 0){
                 document.getElementById('child-status').innerHTML = `
-                    <div style="background-color: #FFE4E1; padding: 15px; border-radius: 5px; border-left: 4px solid #FF6B9D;">
-                        <p>📭 No children found for this email address, or no attendance recorded for today.</p>
-                    </div>
-                `;
+                   <p style="color: #FF6B9D; font-weight: bold;">📭 No attendance recorded for your child(ren) today.</p>`;
                 return;
             }
             
             //9. Build HTML display 
-            let html = `<div style="background-color: #FFF0F5; padding: 15px; border-radius: 5px; border-left: 4px solid #FF6B9D;">`;
-            html += `<h3>👨‍👩‍👧 Your Child(ren)'s Status Today</h3>`;
+            let html = `<div style="background-color: #FFF0F5; padding: 15px; border-radius: 5px; border: 2px solid #FF6B9D;">`;
+            html += `<h3 style="color: #FF6B9D;">👨‍👩‍👧 Your Child(ren)'s Status</h3>`;
             html += `<table border="1" cellpadding="10" style="border-collapse: collapse; width: 100%; margin-top: 10px;">`;
             html += `<tr style="background-color: #FF6B9D; color: white;">`;
             html += `<th>Child Name</th><th>Arrival Time</th><th>Departure Time</th><th>Current Status</th>`;
