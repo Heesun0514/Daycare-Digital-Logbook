@@ -10,7 +10,8 @@ const app = express();
 
 
 //Start the sever 
-const port = process.env.PORT || 3000;
+// CRUCIAL: Cloud Run dynamically injects the PORT environment variable
+const port = process.env.PORT || 8080;
 
 
 // Middleware
@@ -479,7 +480,6 @@ db.all(sql,[from,to],(err,rows)=>{
 
 
 // Start the server
-app.listen(port,()=>{
-    console.log("Server is running"); // Show in terminal
-    console.log(` Express server runing at http://localhost:${port}`); // Show address 
+app.listen(port, '0.0.0.0', () => {
+    console.log(`🚀 Daycare server is live and listening on 0.0.0.0:${port}`);
 });

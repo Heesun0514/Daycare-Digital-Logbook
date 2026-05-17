@@ -14,6 +14,17 @@
 // Import sqlite3 with verbose mode for detailed logs
 const sqlite3=require('sqlite3').verbose()
 
+const fs=require('fs');
+
+// Ensure production folder mount exists safely before opening SQLite
+if (process.env.NODE_ENV === 'production') {
+    const logDir = '/mnt/storage';
+    if (!fs.existsSync(logDir)){
+        fs.mkdirSync(logDir, { recursive: true });
+    }
+}
+
+
 // Import path module to handle file paths
 const path = require('path');
 
