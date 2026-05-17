@@ -17,16 +17,15 @@ const sqlite3=require('sqlite3').verbose()
 // Import path module to handle file paths
 const path = require('path');
 
-// Create or connect to database file in current folder
-const db=new sqlite3.Database(path.join(__dirname,'daycare.db'),(err)=>{
-    if(err){
-        console.error('❌ Database connection error:',err.message)
-    }else 
-    {
-        console.log("✅ Connected to daycare.db");
-    }
+// Use the mounted network folder in production, fallback to local for testing
+   const dbPath = process.env.NODE_ENV === 'production' 
+       ? '/mnt/storage/attendance.db' 
+       : path.join(__dirname, 'database.db');
 
-});
+   const db = new sqlite3.Database(dbPath, (err) => {
+       if (err) console.error('Database opening error:', err.message);
+       else console.log(`Connected to SQLite database at: ${dbPath}`);
+   });
 
 // Execute SQL commands in sequence
 db.serialize(()=>{
