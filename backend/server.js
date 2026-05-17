@@ -97,7 +97,7 @@ app.post('/api/attendance/checkin',(req,res)=>{
    
    //Run the SQL query with the actual values
         //db.run "writing" or "modifying (INSERT,UPDATE,DELETE)
-   db.run(sql,[child_name,arrival_time,date],function(err){ //Callback Function,asynchronous
+   db.run(sql,[child_name,parentEmail,arrival_time,date],function(err){ //Callback Function,asynchronous
 
     //If database error occurs, send 500 server error.
     if(err){
