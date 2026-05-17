@@ -9,8 +9,8 @@ const db=require('./database'); // connnected to database.js
 const app = express();
 
 
-//Set the door number to 3000.
-const port=3000;
+//Start the sever 
+const port = process.env.PORT || 3000;
 
 
 // Middleware
