@@ -1,6 +1,8 @@
 const db=require('./database');
 // Add test data with auto-generated parent emails 
 
+console.log('Seeding database.....');
+
 db.serialize(()=>{
     const today = new Date().toISOString().split('T')[0];
 
@@ -29,13 +31,14 @@ db.serialize(()=>{
         // Register child if not already registered 
 
         db.run(
-            `INSERT OR IGNORE INTO children(child_name,parent_email) VALUES(?,?),`[data.child_name.parentEmail]
+            `INSERT OR IGNORE INTO children(child_name,parent_email) VALUES(?,?)`
+            [data.child_name,parentEmail]
         );
 
         // Insert attendance record 
 
         db.run(
-            `INSERT INTO attendance (child_name,parent_email,arriavl_time,departure_time,date) VALUES(?,?,?,?,?)`,
+            `INSERT INTO attendance (child_name,parent_email,arrival_time,departure_time,date) VALUES(?,?,?,?,?)`,
             [data.child_name,parentEmail,data.arrival_time,data.departure_time,data.date],
             function(err){
                 if(err){
