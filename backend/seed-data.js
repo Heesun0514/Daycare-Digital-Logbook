@@ -31,7 +31,7 @@ db.serialize(()=>{
         // Register child if not already registered 
 
         db.run(
-            `INSERT OR IGNORE INTO children(child_name,parent_email) VALUES(?,?)`
+            `INSERT OR IGNORE INTO children(child_name,parent_email) VALUES(?,?)`,
             [data.child_name,parentEmail]
         );
 
