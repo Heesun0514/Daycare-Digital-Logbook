@@ -1,66 +1,61 @@
-name: CI/CD Pipeline
+name: CI/CD Deployment to Cloud Run
 
 on:
   push:
-    branches: [ main, develop ]
-  pull_request:
-    branches: [ main, develop ]
+    branches: [ "main" ]
 
 jobs:
   test:
-    name: Run Tests
     runs-on: ubuntu-latest
-    
-    strategy:
-      matrix:
-        node-version: [18.x, 20.x]
-    
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    - uses: actions/checkout@v4
+    
+    - name: Use Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18.x
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm install
       
-      - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-          cache-dependency-path: 'backend/package-lock.json'  # ✅ Added!
-      
-      - name: Install dependencies
-        run: cd backend && npm ci  # ✅ updated!
-      
-      - name: Run tests
-        run: cd backend && npm test  # ✅ updated!
-      
-      - name: Run linter
-        run: cd backend && npm run lint --if-present  # ✅ updated!
-      
-      - name: Build
-        run: cd backend && npm run build --if-present  # ✅ updated!
+    - name: Run Integration Tests
+      run: npm test
 
   deploy:
-    name: Deploy
-    runs-on: ubuntu-latest
     needs: test
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
     
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-          cache: 'npm'
-          cache-dependency-path: 'backend/package-lock.json'  # ✅ added!
-      
-      - name: Install dependencies
-        run: cd backend && npm ci  # ✅ updated!!
-      
-      - name: Build
-        run: cd backend && npm run build --if-present  # ✅ updated!!
-      
-      - name: Deploy to production
-        run: |
-          echo "Deploying to production..."
+    - uses: actions/checkout@v4
+
+    - name: Google Auth
+      uses: google-github-actions/auth@v2
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v2
+
+    - name: Configure Docker
+      run: |
+        gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+
+    - name: Build and Push Container
+      run: |
+        IMAGE_NAME=us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/daycare-repo/attendance-app:${{ github.sha }}
+        docker build -t $IMAGE_NAME .
+        docker push $IMAGE_NAME
+
+    - name: Deploy to Cloud Run
+      run: |
+        gcloud run deploy daycare-attendance-system \
+          --image=us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/daycare-repo/attendance-app:${{ github.sha }} \
+          --region=us-central1 \
+          --platform=managed \
+          --allow-unauthenticated \
+          --set-env-vars NODE_ENV=production \
+          --add-volume=name=sqlite-volume,type=cloud-storage,bucket=daycare-db-bucket \
+          --add-volume-mount=volume=sqlite-volume,mount-path=/mnt/storage \
+          --execution-environment=gen2 \
+          --max-instances=1
