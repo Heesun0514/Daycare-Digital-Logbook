@@ -63,3 +63,4 @@ jobs:
           --add-volume-mount=volume=sqlite-volume,mount-path=/mnt/storage \
           --execution-environment=gen2 \
           --max-instances=1
+          --service-account=github-deployer@${{ secrets.GCP_PROJECT_ID }}.iam.gserviceaccount.com
