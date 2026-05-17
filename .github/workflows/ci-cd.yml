@@ -47,7 +47,6 @@ jobs:
     - name: Build and Push Container
       run: |
         IMAGE_NAME=us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/daycare-repo/attendance-app:${{ github.sha }}
-        cd backend  # ← Added! (Dockerfile in backend)
         docker build -t $IMAGE_NAME .
         docker push $IMAGE_NAME
 
