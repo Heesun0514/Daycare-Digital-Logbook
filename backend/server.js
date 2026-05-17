@@ -18,7 +18,7 @@ const port = process.env.PORT || 8080;
 app.use(express.json());
 app.use(express.static(path.join(__dirname,'../frontend')));
 
-// Add this routes 
+// Added root route handler to serve index.html:
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
