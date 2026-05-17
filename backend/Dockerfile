@@ -15,17 +15,15 @@ RUN apt-get update && apt-get install -y \
 # Create app directory
 WORKDIR /usr/src/app
 
-# Install app dependencies
-COPY package*.json ./
+# Copy lock files from backend
+COPY backend/package*.json ./backend/
+RUN cd backend && npm install --only=production --build-from-source=sqlite3
 
-# CRUCIAL: Force npm to compile sqlite3 directly from source code
-RUN npm install --only=production --build-from-source=sqlite3
+# Copy both backend and frontend directories into the image
+COPY backend/ ./backend/
+COPY frontend/ ./frontend/
 
-# Bundle app source
-COPY . .
-
-# Expose port (Cloud Run defaults to 8080)
 EXPOSE 8080
 
-# Start the application
-CMD [ "node", "server.js" ]
+# Run the server from inside the backend directory
+CMD [ "node", "backend/server.js" ]
