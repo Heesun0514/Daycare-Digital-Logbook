@@ -560,7 +560,7 @@ Tests: 2 passed, 2 total
 | 🔐 **Duplicate Check-out Prevention** | Cannot check out same child twice | Data integrity |
 | 🧪 **Integration Tests** | Full workflow testing (20 total tests) | Reliable system |
 | 🚀 **CI/CD Pipeline** | GitHub Actions automated testing | Quality assurance on every push |
-| 📱 **Mobile-Friendly Design** | Works on tablets and phones | Teachers can use devices while moving |
+
 
 ## 6. Attributions
 
