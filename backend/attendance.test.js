@@ -704,19 +704,19 @@ describe('✅ READ (REPORT) Test ',()=>{
 
         await request(app)
         .post('/api/attendance/checkin')
-        .send({child_name: 'Milla', arrival_time: '09:00', date: '04-05-2026'})
+        .send({child_name: 'Milla', arrival_time: '09:00', date: '2026-05-04'})
 
         await request(app)
         .post('/api/attendance/checkin')
-        .send({child_name: 'Milla', arrival_time: '09:00', date: '05-05-2026'})
+        .send({child_name: 'Milla', arrival_time: '09:00', date: '2026-05-05'})
 
 
 
         //Request a report for May 4th only (single day range)
         const response= await request(app)
 
-         // chaged DD-MM-YYYY
-        .get('/api/attendance/report?from=04-05-2026&to=04-05-2026') 
+         // chaged  YYYY-MM-DD
+        .get('/api/attendance/report?from=2026-05-04&to=2026-05-04') 
 
         expect(response.statusCode).toBe(200);
 
@@ -730,7 +730,7 @@ describe('✅ READ (REPORT) Test ',()=>{
        
         const response= await request(app) 
                 //no data exists in database
-        .get('/api/attendance/report?from=02-05-2026&to=03-05-2026') 
+        .get('/api/attendance/report?from2026-05-02&to=2026-05-03') 
 
                 //Server returns 200 (not 404) because the endpoint itself exists
         expect(response.statusCode).toBe(200);
@@ -744,7 +744,7 @@ describe('✅ READ (REPORT) Test ',()=>{
        
         const response= await request(app) 
                 //Request a report with only 'from' parameter (missing the 'to' parameter)
-        .get('/api/attendance/report?from=02-05-2026') 
+        .get('/api/attendance/report?from=2026-05-04') 
 
                 //Server returns 400 Bad Request status code
         expect(response.statusCode).toBe(400);
@@ -764,14 +764,13 @@ describe('🔄 INTEGRATION TEST - Full Attendance Workflow', () => {
     
     test('INT-01: Complete workflow - Check-in → View in Report → Check-out → Verify Departure', async () => {
         
-        const testDate = '04-05-2026';
+        const testDate = '2026-05-04';
         const childName = 'Emma Johnson';
         const arrivalTime = '09:00';
         const departureTime = '17:30';
 
         // ============================================================
         // STEP 1: CHECK-IN a child (POST /api/attendance/checkin)
-        // 1. Removed parent_email from check-in request body
         // ============================================================
         const checkinResponse = await request(app)
             .post('/api/attendance/checkin')
@@ -795,7 +794,6 @@ describe('🔄 INTEGRATION TEST - Full Attendance Workflow', () => {
 
         // ============================================================
         // STEP 2: VERIFY in today's attendance (GET /api/attendance/report)
-        // 3. Use that captured email for filtering the report
         // ============================================================
         const todayReportResponse = await request(app)
             .get(`/api/attendance/report?from=${testDate}&to=${testDate}&parent_email=${capturedParentEmail}`);
@@ -848,7 +846,7 @@ describe('🔄 INTEGRATION TEST - Full Attendance Workflow', () => {
         // STEP 5: GENERATE full report for date range
         // ============================================================
         const rangeReportResponse = await request(app)
-            .get(`/api/attendance/report?from=01-05-2026&to=30-05-2026`);
+            .get(`/api/attendance/report?from=2026-05-01&to=30-05-2026`);
 
         expect(rangeReportResponse.statusCode).toBe(200);
         console.log(`✅ Step 5 Passed: Full date range report generated successfully`);
@@ -856,7 +854,7 @@ describe('🔄 INTEGRATION TEST - Full Attendance Workflow', () => {
 
     test('INT-02: Multiple children in same day - Verify isolated records', async () => {
         
-        const testDate = '05-05-2026';
+        const testDate = '2026-05-05';
 
         // Check in 3 different children (Backend auto-generates emails dynamically)
         const child1 = await request(app)
