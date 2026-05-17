@@ -86,14 +86,14 @@ app.post('/api/attendance/checkin',(req,res)=>{
    }
 
    // 1.2 Auto-generate parent_email from child_name 
-   getOrCreateParentEmail(child_name,(err,prarentEmail)=>{
+   getOrCreateParentEmail(child_name,(err,parentEmail)=>{
     if(err){
         return res.status(500).json({error:err.message});
    }
    
    // 1.3 Save to database with auto-generated parent_email 
                 //The ? symbols are placeholders that keep the database safe from hackers (SQL injection).
-   const sql=`INSERT INTO attendance(child_name,arrival_time,date)VALUES(?,?,?);`
+   const sql=`INSERT INTO attendance(child_name,parent_email,arrival_time,date)VALUES(?,?,?,?);`
    
    //Run the SQL query with the actual values
         //db.run "writing" or "modifying (INSERT,UPDATE,DELETE)
