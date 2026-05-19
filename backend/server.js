@@ -24,8 +24,8 @@ app.use(express.static(frontendPath));
 
 
 // OPTIONAL FALLBACK: If a user types an unknown URL, send them index.html
-app.get('*', (req, res) => {
-    res.sendFile(path.join(frontendPath, 'index.html'));
+app.get('/*path', (req, res) => {
+    res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
 });
 
 // ============== HELPER FUNCTION ====================
