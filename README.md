@@ -559,7 +559,7 @@ docker run -p 8080:8080 -e PORT=8080 daycare-app
 
 ### Access the Application
 
-After starting the server (Docker or local), open your browser and navigate to:
+After starting the server (Docker), open your browser and navigate to:
 http://localhost:8080
 
 ## 8.Known Limitations & Future Work
