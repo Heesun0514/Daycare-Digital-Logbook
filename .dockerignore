@@ -1,0 +1,8 @@
+node_modules
+npm-debug.log
+.git
+.github
+database.db**/*.db
+**/attendance.test.js
+**/seed-data.js
+.DS_Store
