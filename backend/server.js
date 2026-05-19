@@ -18,14 +18,14 @@ const port = process.env.PORT || 8080;
 // Middleware
 app.use(express.json());
 
-const frontendPath = path.join(__dirname, '..', 'frontend');
+const frontendPath = path.join(__dirname, '../frontend');
+console.log(`📁 Serving static files from: ${frontendPath}`);
 app.use(express.static(frontendPath));
 
 
-
 // OPTIONAL FALLBACK: If a user types an unknown URL, send them index.html
-app.get('/*path', (req, res) => {
-    res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
+app.get('/*', (req, res) => {
+    res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
 // ============== HELPER FUNCTION ====================
