@@ -557,14 +557,10 @@ docker run -p 8080:8080 -e PORT=8080 daycare-app
 
 ```
 
-### Frontend Execution
+### Access the Application
 
-```bash
-
-cd frontend
-python -m http.server 3000
-
-```
+After starting the server (Docker or local), open your browser and navigate to:
+http://localhost:8080
 
 ## 8.Known Limitations & Future Work
 
