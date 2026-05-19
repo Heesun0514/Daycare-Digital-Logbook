@@ -1,4 +1,7 @@
 
+# 🧸📝 Childcare Smart Notebook - Attendance Management System
+
+
 **Student Name:** Huiseon Yi 
 
 **Student Number:**  10599161
@@ -14,10 +17,9 @@
 
 ---
 
-# 🧸📝 Childcare Smart Notebook
 
-## System Requirements
-1.1 Organisation Selection  
+
+## 1. Organisation Selection  
 
 **Organisation:** Daycare Centre  
 
@@ -42,7 +44,8 @@
 
 ---
 
-1.2 Functional Requirements  
+## 2. Requirements
+### 2.1 Functional Requirements  
 
 | ID | Requirement | CRUD Type | Actor |
 |----|-------------|-----------|-------|
@@ -61,7 +64,7 @@
 - **UPDATE** → Check-out (departure time), Edit times  
 - **DELETE** → Not required (departure time marks the end of record)
 
-1.3 Non-functional Requirements  
+### 2.2 Non-functional Requirements
 
 | Category | Requirement | Why Important |
 |----------|-------------|----------------|
@@ -77,9 +80,9 @@
 ---
 
 
-1.4 Data requirements 
+### 2.3 Data Requirements
 
-The system uses SQLite database with two tables: `attendance` and `children`.
+The system uses **SQLite** database with two tables: `attendance` and `children`.
 
 #### attendance Table
 
@@ -110,11 +113,8 @@ The system uses SQLite database with two tables: `attendance` and `children`.
 | date | Required, format YYYY-MM-DD |
 | departure_time | Optional, can only be set after arrival |
 
-1.5 Use Cases  
 
----
-
-## 🧑‍🤝‍🧑 Actors
+### 2.4 Actors & Use Cases
 
 | Actor | Type | Description |
 |-------|------|------|
@@ -123,9 +123,7 @@ The system uses SQLite database with two tables: `attendance` and `children`.
 | Parent | Primary |Views their child's attendance status |
 | Inspector | Stakeholder|Reviews attendance reports (not a direct system user) |
 
----
-
-## 📋 Use Cases
+**Use Cases:**
 
 | Use Case | Primary Actor |
 |----------|----------------|
@@ -137,8 +135,6 @@ The system uses SQLite database with two tables: `attendance` and `children`.
 | Download Report | Director |
 | View Child Status | Parent |
 
-
----
 
 ## 🔗  Actor-Use Case Relationships
 
@@ -152,7 +148,6 @@ The system uses SQLite database with two tables: `attendance` and `children`.
 | Director | Download Report (extends Generate Report) |
 | Parent | View Child Status |
 
----
 
 ## 📖 Detailed Use Cases
 
@@ -336,22 +331,19 @@ The system uses SQLite database with two tables: `attendance` and `children`.
 | 2 | System shows: *"No children found. Please contact director."* |
 
 
-## 2. CRUD Operations
+## 3. CRUD Operations & API Endpoints
 
 | Operation | Description | API Endpoint |
 |-----------|-------------|--------------|
 | Create | Record arrival time | `POST /api/attendance/checkin` |
-| Read | View today's attendance | `GET /api/attendance/report` |
-| Read | Generate report | `GET /api/attendance/report?from=` |
+| Read | View today's attendance / Generate report | `GET /api/attendance/report?from=YYYY-MM-DD&to=YYYY-MM-DD` |
 | Update | Record departure time | `PUT /api/attendance/checkout/:id` |
 | Update | Edit arrival/departure | `PUT /api/attendance/:id` |
 | Delete | (Not required) | N/A |
 
 ---
 
-## 3. System Architecture
-
-### 3.1 API Endpoints
+### API Details
 
 | Method | Endpoint | Description | Request Body | Response |
 |--------|----------|-------------|--------------|----------|
@@ -360,8 +352,9 @@ The system uses SQLite database with two tables: `attendance` and `children`.
 | PUT | `/api/attendance/:id` | Edit attendance time | `{ arrival_time, departure_time, date }` | `{ success, message, record }` |
 | GET | `/api/attendance/report?from=YYYY-MM-DD&to=YYYY-MM-DD` | Generate report | None (query params) | `{ success, message, record }` |
 
+## 4. System Architecture
 
-### 3.2 Tech Stack
+### 4.1 Tech Stack
 
 | Layer | Technology |
 |-------|------------|
@@ -372,13 +365,15 @@ The system uses SQLite database with two tables: `attendance` and `children`.
 | **Testing** | Jest + Supertest |
 | **CI/CD** | GitHub Actions |
 | **Version Control** | Git & GitHub |
+| **Container** | Docker |
+| **Orchestration** | Google Cloud Run |
 
-### 3.3 Database
+### 4.2 Database Choice
 
 I used SQLite because it’s a serverless database. It’s perfect for this prototype because it ensures data integrity (like keeping child records organized) while staying lightweight. It makes the app easier to deploy and test as a proof-of-concept.
 
 
-### 3.4 Project Structure
+### 4.3 Project Structure
 
 ```
 Daycare-Digital-Logbook/ # Root folder
@@ -399,16 +394,18 @@ Daycare-Digital-Logbook/ # Root folder
 │ ├── app.js # JavaScript file ✅
 │ └── index.html # HTML file ✅
 │
+├── .dockerignore # Excludes files from Docker build context ✅
 ├── .gitignore # Git exclude file ✅
+├── Dockerfile # Docker image configuration for Cloud Run ✅
 └── README.md # Project description file ✅
 
 ```
 
 ---
 
-## 4. Testing
+## 5. Testing
 
-### 4.1 TESTING STRATEGY & TOOL SELECTION
+### 5.1 TESTING STRATEGY & TOOL SELECTION
 
  WHY JEST INSTEAD OF CURL COMMANDS?
 
@@ -427,30 +424,16 @@ Daycare-Digital-Logbook/ # Root folder
 - "Unit tests" → Jest provides REAL unit tests
 - "Integration test" → Supertest tests full API flow
 
-### 4.2 INSTALLATION:
+### 5.2 Running Tests
 
 ```bash
-  npm install --save-dev jest supertest
+npm install --save-dev jest supertest
+npm test                 # Run all tests once
+npm run test:watch      # Auto-run on file changes
+npm test -- --coverage  # Show coverage report
  ```
 
-### 4.3  RUN TESTS:
-```bash
-   npm test                 # Run all tests once
-   npm run test:watch      # Auto-run on file changes
-   npm test -- --coverage  # Show coverage report
-  ```
-
-### 4.4 TEST STRUCTURE:
-
-```bash
-   backend/
-   ├── tests/
-   │   └── attendance.test.js      # All CRUD operation tests
-   ├── server.js                   # API endpoints
-   └── package.json                # "test": "jest" script added
-```
-
-### 4.5 Unit Test Results
+### 5.3 Unit Test Results
 
 #### CREATE (Check-in) Tests
 
@@ -490,7 +473,7 @@ Daycare-Digital-Logbook/ # Root folder
 | TC-16 | Return empty array when no records | 200 | 200 | ✅ PASS |
 | TC-17 | Reject missing date parameters | 400 | 400 | ✅ PASS |
   
-### 4.6 Integration Test Results
+### 5.4 Integration Test Results
 
 Integration tests verify that multiple components work together correctly. The test simulates a complete daycare workflow from check-in to check-out.
 
@@ -547,7 +530,7 @@ user@MacBookAir backend % npm test -- -t "INTEGRATION"
 Tests: 2 passed, 2 total
 ```
 
-## 5. Additional Features
+## 6. Additional Features
 
 | Feature | Description | Benefit |
 |---------|-------------|---------|
@@ -562,7 +545,44 @@ Tests: 2 passed, 2 total
 | 🚀 **CI/CD Pipeline** | GitHub Actions automated testing | Quality assurance on every push |
 
 
-## 6. Attributions
+## 7. 🚀 Deployment
+
+### Docker (Local)
+```bash
+# Build image
+docker build --no-cache --platform linux/amd64 -t daycare-app .
+
+# Run container
+docker run -p 8080:8080 -e PORT=8080 daycare-app
+
+```
+
+### Frontend Execution
+
+```bash
+
+cd frontend
+python -m http.server 3000
+
+```
+
+## 8.Known Limitations & Future Work
+
+**Limitations**
+- No authentication (anyone with email can view child status)
+- DELETE operation not implemented (not required per specification)
+- Single daycare centre assumption (no multi-room support)
+- No real-time push notifications
+
+
+**Future Work**
+- Login system for Teachers / Directors
+- Multi-class / multi-room support
+- Push notifications for parents upon check-in/out
+- Automated daily summary emails
+
+
+## 9. Attributions
 
 
 - **GitHub Copilot**: [Conversation Reference](https://github.com/copilot/c/7a15ef38-e45a-44a7-a1ca-eb556f0f68e8)
@@ -571,4 +591,5 @@ Tests: 2 passed, 2 total
 
 **For a detailed, line-by-line record of AI prompts and code changes, please refer to the full documentation:**
 📄 [**Complete Project Documentation (Google Docs)**](https://docs.google.com/document/d/1ZdpxEJkm0rWf6x-e28wwlwvCubOeQxV2J4zNFa6sdmc/edit?usp=sharing)
+
 
