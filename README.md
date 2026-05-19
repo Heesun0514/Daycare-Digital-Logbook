@@ -123,7 +123,7 @@ The system uses **SQLite** database with two tables: `attendance` and `children`
 | Parent | Primary |Views their child's attendance status |
 | Inspector | Stakeholder|Reviews attendance reports (not a direct system user) |
 
-**Use Cases:**
+**Use Cases Summary:**
 
 | Use Case | Primary Actor |
 |----------|----------------|
