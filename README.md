@@ -136,19 +136,6 @@ The system uses **SQLite** database with two tables: `attendance` and `children`
 | View Child Status | Parent |
 
 
-## 🔗  Actor-Use Case Relationships
-
-| Actor | Use Case |
-|-------|----------|
-| Teacher | Record Arrival |
-| Teacher | Record Departure |
-| Teacher | Edit Attendance Time |
-| Teacher | View Today's Attendance List |
-| Director | Generate Report |
-| Director | Download Report (extends Generate Report) |
-| Parent | View Child Status |
-
-
 ## 📖 Detailed Use Cases
 
 ### 1️⃣ Use Case: Record Arrival
