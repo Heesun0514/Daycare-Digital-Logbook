@@ -23,10 +23,6 @@ console.log(`📁 Serving static files from: ${frontendPath}`);
 app.use(express.static(frontendPath));
 
 
-// Fallback route for SPA - must be AFTER all API routes
-app.get('*', (req, res) => {
-    res.sendFile(path.join(frontendPath, 'index.html'));
-});
 
 // ============== HELPER FUNCTION ====================
 // Auto-generate parent email from child name
@@ -487,6 +483,11 @@ db.all(sql,[from,to],(err,rows)=>{
 });
     
 
+
+// Fallback route for SPA - AFTER all API routes
+app.get(/.*/, (req, res) => {
+    res.sendFile(path.join(frontendPath, 'index.html'));
+});
 
 // Start the server
 app.listen(port, '0.0.0.0', () => {
