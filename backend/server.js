@@ -23,8 +23,8 @@ console.log(`📁 Serving static files from: ${frontendPath}`);
 app.use(express.static(frontendPath));
 
 
-// OPTIONAL FALLBACK: If a user types an unknown URL, send them index.html
-app.get('/*', (req, res) => {
+// Fallback route for SPA - must be AFTER all API routes
+app.get('*', (req, res) => {
     res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
