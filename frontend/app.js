@@ -13,7 +13,7 @@ function getCurrentDate() {
 
 // API BAse URL
 
-const API_BASE='http://localhost:3000/api/attendance';
+const API_BASE='http://localhost:8080/api/attendance';
 
 
 
@@ -62,7 +62,7 @@ async function checkin(){
 
     try { 
         //3. send the "Package " (JSON) to the server 
-        const response = await fetch ('http://localhost:3000/api/attendance/checkin',{
+        const response = await fetch ('http://localhost:8080/api/attendance/checkin',{
         method:'POST', // create new data
         headers:{'Content-type':'application/json'}, // JSOM format 
         body:JSON.stringify({child_name,arrival_time,date}) //converts the javascript object into a JSON string
@@ -103,7 +103,7 @@ async function checkout(){
     try { 
         //3. send the "Package " (JSON) to the server 
           // ✅ fixed: URL includes ID parameter
-        const response = await fetch (`http://localhost:3000/api/attendance/checkout/${id}`,{
+        const response = await fetch (`http://localhost:8080/api/attendance/checkout/${id}`,{
         method:'PUT', // update the data
         headers:{'Content-type':'application/json'}, // JSOM format 
         body:JSON.stringify({departure_time}) //converts the javascript object into a JSON string
@@ -147,7 +147,7 @@ async function loadTodayAttendance(){
     try { 
         //3. send the "Package " (JSON) to the server 
         
-        const response = await fetch (`http://localhost:3000/api/attendance/report?from=${todayFormatted}&to=${todayFormatted}`,{
+        const response = await fetch (`http://localhost:8080/api/attendance/report?from=${todayFormatted}&to=${todayFormatted}`,{
         
             // no need method,headers, or body because this function is fetching(READING)data,not sending or updating
     });
@@ -254,7 +254,7 @@ async function editAttendanceTime(){
     try { 
         //4. send the "Package " (JSON) to the server 
           
-        const response = await fetch (`http://localhost:3000/api/attendance/${id}`,{
+        const response = await fetch (`http://localhost:8080/api/attendance/${id}`,{
         method:'PUT', // update the data
         headers:{'Content-type':'application/json'}, // JSOM format 
         body:JSON.stringify(updateData) //converts the javascript object into a JSON string
@@ -298,7 +298,7 @@ async function generateReport(){
     try { 
         //3. send the "Package " (JSON) to the server 
         
-        const response = await fetch (`http://localhost:3000/api/attendance/report?from=${from}&to=${to}`,{
+        const response = await fetch (`http://localhost:8080/api/attendance/report?from=${from}&to=${to}`,{
         
             // no need method,headers, or body because this function is fetching(READING)data,not sending or updating
     });
@@ -439,7 +439,7 @@ async function viewChildStatus(){
         const today = new Date().toISOString().split('T')[0];
 
         //5. Use existing REPORT API to get all today's attendance
-        const response = await fetch(`http://localhost:3000/api/attendance/report?from=${today}&to=${today}`);
+        const response = await fetch(`http://localhost:8080/api/attendance/report?from=${today}&to=${today}`);
         
         //6. parse the response
         const result = await response.json();
