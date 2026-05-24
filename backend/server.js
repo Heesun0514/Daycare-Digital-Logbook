@@ -492,4 +492,6 @@ app.get(/.*/, (req, res) => {
 // Start the server
 app.listen(port, '0.0.0.0', () => {
     console.log(`🚀 Daycare server is live and listening on 0.0.0.0:${port}`);
+    console.log(`📍 Access the application at: http://localhost:${PORT}`);
+    console.log(`📍 Or on your network: http://0.0.0.0:${PORT}`);
 });
